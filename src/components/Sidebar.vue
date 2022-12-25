@@ -113,7 +113,7 @@ props: ['page'],
         if (this.NavigationButtons[page].AnotherPage) {
             window.open(this.NavigationButtons[page].Link, '_blank');
         } else {
-            this.$router.push(this.NavigationButtons[page].Link);
+            this.$router.push(this.NavigationButtons[page].Link).then(() => window.location.reload());
         }
 	}
   },
