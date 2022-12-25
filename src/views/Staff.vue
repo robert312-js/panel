@@ -1,6 +1,6 @@
 <template>
 	
-	<serverstaff-page>
+	<div class="dashboard">
 		<Staff-Sidebar page="3"/>
 		<div class="staff-content">
 			<Staff-Header page="Membrii Staff"/>
@@ -108,7 +108,7 @@
 				</div>
 			</div>
 		</div>
-	</serverstaff-page>
+	</div>
 </template>
 
 <script>
@@ -231,17 +231,6 @@
 </script>
 
 <style lang="css">
-
-serverstaff-page {
-	width: 100%;
-	height: 100%;
-	position: relative;
-	transition: var(--tran-05);
-
-	display: inline-flex;
-	justify-content: left;
-	align-items: left;
-}
 
 .staff-content {
 	width: 100%;

@@ -1,5 +1,5 @@
 <template>
-<dashboard-page>
+<div class="dashboard">
 	<Dashboard-Sidebar page="1" />
 
 	<div class="dashboard-content">
@@ -144,7 +144,7 @@
 			</div>
 		</div>
 	</div>
-</dashboard-page>
+</div>
 </template>
 
 
@@ -254,18 +254,6 @@
 </script>
 
 <style lang="css">
-
-	dashboard-page {
-		width: 100%;
-		height: 100%;
-		position: relative;
-		transition: var(--tran-05);
-	
-		display: inline-flex;
-		justify-content: left;
-		align-items: left;
-	}
-
 	.dashboard-content {
 		width: 100%;
 		height: 100%;

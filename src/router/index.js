@@ -1,11 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Dashboard from '../views/Dashboard.vue'
 
 const routes = [
 	{
 		path: '/',
 		name: 'Dashboard',
-		component: Dashboard
+		component: import('../views/Dashboard.vue')
 	},
 	{
 		path: '/staff',
@@ -33,11 +32,6 @@ const routes = [
 		path: '/rules',
 		name: "Regulament",
 		component: () => import('../views/Rules.vue')	
-	},
-	{
-		path: '/testestaff',
-		name: "Teste Staff",
-		component: () => import('../views/TesteStaff.vue')	
 	},
 	{
 		path: '/:pathMatch(.*)*',

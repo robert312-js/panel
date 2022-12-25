@@ -1,5 +1,5 @@
 <template>
-    <profile-page>
+    <div class="dashboard">
         <Profile-Sidebar page="0" />
         <div class="profile-container">
             <Profile-Header page="Profil Jucator" />
@@ -162,7 +162,7 @@
                     <div class="profile-actions-history" v-if="InfoCurrentPage == 2">
                         <div class="profile-history-header">
                             <h1>Istoric</h1>
-                            <p>Vizualizezi tot istoricul pe care {{userData['username']}}l-a avut pe acest server</p>
+                            <p>Vizualizezi tot istoricul pe care Robert l-a avut pe acest server</p>
                         </div>
                         <div class="actions-hr"></div>
     
@@ -280,7 +280,7 @@
                                         <p>{{data.text}}</p>
                                     </div>
                                 </div>
-                                <div class="logs-time">{{data.date}}</div>
+                                <div class="logs-time">{{GetDate(data.time)}}</div>
                             </div>
                         </div>
     
@@ -334,7 +334,7 @@
                                 </div>
                             </div>
     
-                            <div class="profile-actions-admin-box setadmin" @click="SetAdmin()" v-if="IsUserAdmin >= 4 || adminId == 3770">
+                            <div class="profile-actions-admin-box setadmin" @click="SetAdmin()" v-if="IsUserAdmin >= 5">
                                 <div class="admin-data">
                                     <div class="icon">
                                         <fa icon="fa-solid fa-user-shield" />
@@ -361,7 +361,7 @@
                                 </div>
                             </div>
     
-                            <div class="profile-actions-admin-box money" @click="GiveMoney()" v-if="IsUserAdmin >= 4">
+                            <div class="profile-actions-admin-box money" @click="GiveMoney()" v-if="IsUserAdmin >= 5">
                                 <div class="admin-data">
                                     <div class="icon">
                                         <fa icon="fa-solid fa-sack-dollar" />
@@ -383,8 +383,7 @@
                 </div>
             </div>
         </div>
-    </profile-page> 
-
+    </div>    
 </template>
 
 
@@ -831,17 +830,6 @@
 
 <style lang="css">
 @import url('https://fonts.cdnfonts.com/css/pf-dindisplay-pro');
-
-profile-page {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    transition: var(--tran-05);
-
-    display: inline-flex;
-    justify-content: left;
-    align-items: left;
-}
 
 .profile-container {
 	width: 100%;

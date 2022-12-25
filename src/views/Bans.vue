@@ -1,6 +1,6 @@
 <template>
     
-    <bans-page>
+    <div class="dashboard">
         <Bans-Sidebar page="2"/>
             <div class="banlist-content">
                 <Bans-Header page="Lista Jucatori Banati"/>
@@ -84,7 +84,7 @@
                     </div>
                 </div>
             </div>
-    </bans-page>
+        </div>
     </template>
     
     <script> 
@@ -190,17 +190,6 @@
     </script>
     
     <style lang="css">
-
-    bans-page {
-        width: 100%;
-		height: 100%;
-		position: relative;
-		transition: var(--tran-05);
-	
-		display: inline-flex;
-		justify-content: left;
-		align-items: left;
-    }
     
     .banlist-content {
         width: 100%;

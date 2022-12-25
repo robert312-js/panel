@@ -1,11 +1,11 @@
 <template>
 	
-	<raportstaff-page>
+	<div class="dashboard">
 		<staffraport-Sidebar page="3"/>
 		<div class="staffraport-content">
 			<staffraport-Header page="Rapoarte Staff"/>
 
-			<div class="staffraport-members" v-if="IsUserAdmin >= 4">
+			<div class="staffraport-members">
 				<div class="staffraport-members-header">
 					<div class="staffraport-header-data">
 						<div class="icon">
@@ -97,7 +97,7 @@
 				</div>
 			</div>
 		</div>
-	</raportstaff-page>
+	</div>
 </template>
 
 <script>
@@ -114,7 +114,6 @@
 
             // data
             IsUserAdmin: 0,
-			adminId: 0,
 		};
 	  },
 	  components: {
@@ -185,7 +184,7 @@
 			  }
 			})
         },
-        async hasUserAdmin() {
+		async hasUserAdmin() {
             this.$axios.get("https://fairplay-rp.ro/api/admin", { withCredentials: true }).then((response) => {
                 if (response.data.isAdmin) {
                     this.IsUserAdmin = response.data['adminLvl'];
@@ -252,17 +251,6 @@
 </script>
 
 <style lang="css">
-
-raportstaff-page {
-	width: 100%;
-	height: 100%;
-	position: relative;
-	transition: var(--tran-05);
-
-	display: inline-flex;
-	justify-content: left;
-	align-items: left;
-}
 
 .staffraport-content {
 	width: 100%;

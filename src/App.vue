@@ -1,5 +1,7 @@
 <template>
-	<div class="app"></div>
+	<div class="app">
+		<router-view />
+	</div>
 </template>
 
 <style lang="scss">
@@ -39,16 +41,18 @@
     --tran-05: all 0.5s ease;
     --tran-03: all 0.3s ease;
     --tran-03: all 0.2s ease;
-
-
-	//* ====== SIDEBAR ====== */
-	--sidebar-color: #1a1d1f;
-	--primary-color: #3a3b3c;
-	--primary-color-light: #3a3b3c;
-	--toggle-color: #fff;
-	--text-color: #ccc;
 }
-	
+
+.dashboard{
+	width: 100%;
+	height: 100%;
+	position: relative;
+	transition: var(--tran-05);
+
+	display: inline-flex;
+	justify-content: left;
+	align-items: left;
+}
 
 * {
 	margin: 0;

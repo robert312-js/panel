@@ -111,6 +111,9 @@
         },
 	  },
 	mounted() {
+        const initUserTheme = this.getTheme() || this.getMediaPreference();
+
+		this.setTheme(initUserTheme);
         this.IsUserLogged();
 	  },
 	};

@@ -104,24 +104,17 @@ props: ['page'],
 		};
   },
   methods: {
-	clickRedirect(box) {
-		switch (box) {
-			case 'fivem':
-				window.open("https://fivem.net");
-			break
-		}
-	},
 	ToggleSidebar() {
 		let navbar = $('.sidebar');
 		navbar.toggleClass("close");
 	},
-
 	SelectPage(page) {
-		if (this.NavigationButtons[page].AnotherPage) {
-			window.location.href = this.NavigationButtons[page].Link;
-		} else {
-			this.$router.push(this.NavigationButtons[page].Link);
-		}
+        console.log(page, this.NavigationButtons[page].AnotherPage)
+        if (this.NavigationButtons[page].AnotherPage) {
+            window.open(this.NavigationButtons[page].Link, '_blank');
+        } else {
+            this.$router.push(this.NavigationButtons[page].Link);
+        }
 	}
   },
   created() {

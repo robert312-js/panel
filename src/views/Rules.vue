@@ -1,6 +1,6 @@
 <template>
 	
-	<rules-page>
+	<div class="dashboard">
 		<rules-Sidebar page="4"/>
 		<div class="rules-content">
 			<rules-Header page="Regulamente Server"/>
@@ -96,7 +96,7 @@
 
 			</div>
 		</div>
-	</rules-page>
+	</div>
 </template>
 
 <script>
@@ -131,8 +131,8 @@
                         {text: '➤ Esti la sectia de Politie si scrii pe chat-ul global de pe server: “Poate sa vina cineva sa ma ia si pe mine de la sectie?”.'},
                         {text: '➤ Atunci cand te folosesti de chat-ul global pentru a vinde/cumpara anumite chestii.'},
                     ]},
-                    {id: "1.5 Random Death Match (RDM)", rules: [
-                        {text: "Random Death Match-ul reprezintă când 2 sau mai mulți jucători au început să se împuște ca și cum ar fii într-un joc fără un scop Roleplay."},
+                    {id: "1.5 Death Match (DM)", rules: [
+                        {text: "Death Match-ul reprezintă când 2 sau mai mulți jucători au început să se împuște ca și cum ar fii într-un joc fără un scop Roleplay."},
                     ]},
                     {id: "1.6 Character Kill (CK)", rules: [
                         {text: "Character Kill-ul sau prescurtat CK reprezintă uciderea unui jucator. Daca un jucator primeste CK, acesta isi va putea schimba identitatea/buletinul si nu va mai putea juca cu acel nume."},
@@ -307,6 +307,7 @@
                     ]},             
                     {id: "1.41 Live-Streams", rules: [
                         {text: "➤ Nu aveți voie sa instigati la ura prin intermediul subscriberilor"},
+                        {text: "➤ "},
                     ]},
                     {id: "1.42 HOME", rules: [
                         {text: "➤ Folosirea tastei HOME pentru a vedea cine este persoana respectivă este strict interzisa."},
@@ -559,17 +560,6 @@
 <style lang="css">
 
 @import url('https://fonts.cdnfonts.com/css/akrobat');
-
-rules-page {
-	width: 100%;
-	height: 100%;
-	position: relative;
-	transition: var(--tran-05);
-
-	display: inline-flex;
-	justify-content: left;
-	align-items: left;
-}
 
 .rules-content {
 	width: 100%;
