@@ -11,6 +11,10 @@ export default {
       UserLogs: [],
       UserItemsData: [],
       VehChestData: [],
+      OpenedVehiclesData: {
+        vehicle: '',
+        type: '',
+      },
       // Prompt Data
       promptData: {
         active: false,
@@ -359,7 +363,7 @@ export default {
       } else if (page == 4) {
         this.UserLogs = [];
         this.CurrentPage = 1;
-        const logs = await this.$axios.get("http://localhost:5000/api/serverLogs/" + this.$route.params.id + "/" +"Money");
+        const logs = await this.$axios.get("https://api.fairplay-rp.ro/api/serverLogs/" + this.$route.params.id + "/" +"Money");
         this.UserLogs = logs.data;
         this.setPages(this.UserLogs);
       } else if (page == 6) {
@@ -383,28 +387,15 @@ export default {
       $(".submenu").fadeOut();
       this.Pages = [];
       this.UserLogs = [];
-    
       let logs;
       if (type && !data && !target) {
-        logs = await this.$axios.get(`http://localhost:5000/api/serverLogs/${this.$route.params.id}/${type}`
-        );
+        logs = await this.$axios.get(`https://api.fairplay-rp.ro/api/serverLogs/${this.$route.params.id}/${type}`);
       } else if (type && data && !target) {
-        logs = await this.$axios.get(`http://localhost:5000/api/getServerLogsData/${this.$route.params.id}/${type}/${data}`);
+        logs = await this.$axios.get(`https://api.fairplay-rp.ro/api/getServerLogsData/${this.$route.params.id}/${type}/${data}`);
       } else if (type && data && target) {
-        const result = await Swal.fire({
-          title: "Id-ul jucatorului",
-          input: "text",
-          inputAttributes: {
-            autocapitalize: "off",
-          },
-          showCancelButton: true,
-          confirmButtonText: "Cauta",
-          showLoaderOnConfirm: false,
-        });
-        const id = parseInt(result.value);
-        logs = await this.$axios.get(`http://localhost:5000/api/getServerLogsTarget/${this.$route.params.id}/${type}/${data}/${id}`
-        );
-        Swal.close();
+        const promptData = await this.createPrompt("TARGET ID", [{field: "target", title: "Introduceti id-ul jucatorului"}]);
+        const id = parseInt(promptData['target']);
+        logs = await this.$axios.get(`https://api.fairplay-rp.ro/api/getServerLogsTarget/${this.$route.params.id}/${type}/${data}/${id}`);
       }
       this.UserLogs = logs.data;
       this.CurrentPage = 1;
@@ -425,7 +416,7 @@ export default {
     },
     async hasUserAdmin() {
       try {
-        const response = await this.$axios.get("http://localhost:5000/api/admin", { withCredentials: true });
+        const response = await this.$axios.get("https://api.fairplay-rp.ro/api/admin", { withCredentials: true });
         if (response.data.isAdmin) {
           this.IsUserAdmin = response.data.adminLvl;
           this.adminId = response.data.adminId;
@@ -438,14 +429,14 @@ export default {
     },
     async CanSeeProfileInfo() {
       try {
-        const accountResponse = await this.$axios.get("http://localhost:5000/api/account", { withCredentials: true });
+        const accountResponse = await this.$axios.get("https://api.fairplay-rp.ro/api/account", { withCredentials: true });
         const userData = accountResponse.data.user;
         if (userData.id == this.$route.params.id) {
           this.canSeeUserInfo = true;
           return;
         }
     
-        const adminResponse = await this.$axios.get("http://localhost:5000/api/admin", { withCredentials: true });
+        const adminResponse = await this.$axios.get("https://api.fairplay-rp.ro/api/admin", { withCredentials: true });
         if (adminResponse.data.isAdmin) {
           this.canSeeUserInfo = adminResponse.data.adminLvl >= 2;
           return;
@@ -493,7 +484,7 @@ export default {
 		},
     async GetVehicleChest(vehicle, type) {
       try {
-        let vehicleResponse = await this.$axios.get(`http://localhost:5000/api/getVehicleChest/${this.$route.params.id}/${vehicle}/${type}`);
+        let vehicleResponse = await this.$axios.get(`https://api.fairplay-rp.ro/api/getVehicleChest/${this.$route.params.id}/${vehicle}/${type}`);
         let vehicleData = vehicleResponse.data;
         if (vehicleData['dvalue'] == undefined) {
           Swal.fire({
@@ -505,7 +496,79 @@ export default {
           return;
         }
         this.VehChestData = vehicleData['dvalue'] ? JSON.parse(vehicleData['dvalue']) : [];
+        this.OpenedVehiclesData = {
+          vehicle: vehicle,
+          type: type
+        }
         $('.vehicle-prompt-wrapper').fadeIn();
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async DeleteChestItem(item, amount) {
+      try {
+        let removeItemAmount = amount;
+        var chestData = '';
+        if (this.OpenedVehiclesData.type == 'chest') {
+          chestData = 'chest:vehTrunk_' + this.OpenedVehiclesData.vehicle + '_u' + this.$route.params.id;
+        } else {
+          chestData = 'chest:vehGlovebox_' + this.OpenedVehiclesData.vehicle + '_u' + this.$route.params.id;
+        }
+        if (amount > 1) {
+          let promptData = await this.createPrompt("Sterge item din chest", [{field: "amount", title: "Cantitatea de iteme pe care vrei sa le stergi (Maxim: " + amount + ")"}])
+          if (promptData['amount'] > amount) {
+            return Swal.fire({
+              title: 'Eroare',
+              text: 'Suma introdusa este invalida!',
+              icon: 'error',
+              confirmButtonText: 'Ok'
+            });
+          };
+          if (promptData['amount'] < 1) { 
+            return Swal.fire({
+              title: 'Eroare',
+              text: 'Suma introdusa este invalida!',
+              icon: 'error',
+              confirmButtonText: 'Ok'
+            });
+          } ;
+          removeItemAmount = promptData['amount'];
+        }
+        this.RconAction('removeitemfromveh' + ' ' + item + ' ' + removeItemAmount + ' ' + chestData);
+        setTimeout(() => {
+          this.GetVehicleChest(this.OpenedVehiclesData.vehicle, this.OpenedVehiclesData.type);
+        }, 3000);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async DeletePlayerItem(item, amount) {
+      try {
+        let removeItemAmount = amount;
+        if (amount > 1) {
+          let promptData = await this.createPrompt("Sterge item din chest", [{field: "amount", title: "Cantitatea de iteme pe care vrei sa le stergi (Maxim: " + amount + ")"}])
+          if (promptData['amount'] > amount) {
+            return Swal.fire({
+              title: 'Eroare',
+              text: 'Suma introdusa este invalida!',
+              icon: 'error',
+              confirmButtonText: 'Ok'
+            })
+          };
+          if (promptData['amount'] < 1) {
+            return Swal.fire({
+              title: 'Eroare',
+              text: 'Suma introdusa este invalida!',
+              icon: 'error',
+              confirmButtonText: 'Ok'
+            });
+          }
+          removeItemAmount = promptData['amount'];
+        }
+        this.RconAction('removeitemfromplayer' + ' ' + this.$route.params.id + ' ' + item + ' ' + removeItemAmount);
+        setTimeout(() => {
+          this.GetUserInventory();
+        }, 3000);
       } catch (error) {
         console.error(error);
       }
@@ -516,7 +579,8 @@ export default {
     },
     async GetUserInventory() {
       try {
-        const userResponse = await this.$axios.get(`http://localhost:5000/api/getUdata/${this.$route.params.id}`);
+        this.UserItemsData = [];
+        const userResponse = await this.$axios.get(`https://api.fairplay-rp.ro/api/getUdata/${this.$route.params.id}`);
         const uData = userResponse.data;
         const inventoryData = JSON.parse(uData.dvalue).inventory;
 
@@ -563,7 +627,7 @@ export default {
     },
     // Admin Actions
     async RconAction(command) {
-      this.$axios.post("http://localhost:5000/api/rcon",{ command: command },{ withCredentials: true });
+      this.$axios.post("https://api.fairplay-rp.ro/api/rcon",{ command: command },{ withCredentials: true });
     },
     async BanPlayer() {
         let promptData = await this.createPrompt("BAN PLAYER", [{field: "reason", title:"Motiv"}, {field: "time", title:"Timp"}, {field: "dreptPlata", title:"Drept de plata (1 == DA, 0 == NU)"}]);
@@ -723,16 +787,16 @@ export default {
     }, 2000);
   
     try {
-      const userResponse = await this.$axios.get(`http://localhost:5000/api/user/${this.$route.params.id}`);
+      const userResponse = await this.$axios.get(`https://api.fairplay-rp.ro/api/user/${this.$route.params.id}`);
       this.userData = userResponse.data;
   
-      const punishResponse = await this.$axios.get(`http://localhost:5000/api/userpunishlog/${this.$route.params.id}`);
+      const punishResponse = await this.$axios.get(`https://api.fairplay-rp.ro/api/userpunishlog/${this.$route.params.id}`);
       this.userPunishLog = punishResponse.data;
   
-      const historyResponse = await this.$axios.get(`http://localhost:5000/api/userhistory/${this.$route.params.id}`);
+      const historyResponse = await this.$axios.get(`https://api.fairplay-rp.ro/api/userhistory/${this.$route.params.id}`);
       this.userHistory = historyResponse.data;
   
-      const vehsResponse = await this.$axios.get(`http://localhost:5000/api/uservehicles/${this.$route.params.id}`);
+      const vehsResponse = await this.$axios.get(`https://api.fairplay-rp.ro/api/uservehicles/${this.$route.params.id}`);
       this.userVehicles = vehsResponse.data;
     } catch (error) {
       console.error(error);

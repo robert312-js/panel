@@ -18,7 +18,7 @@ export default {
   },
   methods: {
     async GetStaffMembers() {
-        let users = await this.$axios.get('http://localhost:5000/api/staff')
+        let users = await this.$axios.get('https://api.fairplay-rp.ro/api/staff')
         const PageData = users.data;		
         const staffMembers = []
         PageData.forEach((staff) => {
@@ -42,7 +42,7 @@ export default {
         this.$router.push("/rapoartestaff")
     },
     async hasUserAdmin() {
-        this.$axios.get("http://localhost:5000/api/admin", { withCredentials: true }).then((response) => {
+        this.$axios.get("https://api.fairplay-rp.ro/api/admin", { withCredentials: true }).then((response) => {
             if (response.data.isAdmin) {
                 this.IsUserAdmin = response.data['adminLvl'];
                 this.adminId = response.data['adminId'];

@@ -410,7 +410,7 @@ export default {
   },
   methods: {
     async hasUserAdmin() {
-        this.$axios.get("http://localhost:5000/api/admin", { withCredentials: true }).then((response) => {
+        this.$axios.get("https://api.fairplay-rp.ro/api/admin", { withCredentials: true }).then((response) => {
             if (response.data.isAdmin) {
                 this.IsUserAdmin = response.data['adminLvl'];
                 this.adminId = response.data['adminId'];

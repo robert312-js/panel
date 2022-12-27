@@ -55,18 +55,18 @@ export default {
     }, 2000);
   
     try {
-      const actionsResponse = await this.$axios.get("http://localhost:5000/api/recentactions");
+      const actionsResponse = await this.$axios.get("https://api.fairplay-rp.ro/api/recentactions");
       this.RecentActions = actionsResponse.data.sort((x, y) => +new Date(y.time) - +new Date(x.time)).slice(0, 5);
-      const usersResponse = await this.$axios.get("http://localhost:5000/api/users");
+      const usersResponse = await this.$axios.get("https://api.fairplay-rp.ro/api/users");
       this.UsersData = usersResponse.data;
       this.TopPlayers = this.UsersData.sort(
         (x, y) => y.hoursPlayed - x.hoursPlayed
       ).slice(0, 5);
   
-      const vehiclesResponse = await this.$axios.get("http://localhost:5000/api/vehicles");
+      const vehiclesResponse = await this.$axios.get("https://api.fairplay-rp.ro/api/vehicles");
       this.serverVehicles = vehiclesResponse.data;
     } catch (error) {
-      console.error(error);
+      console.log(error);
     };
   
     $.getJSON("https://servers-frontend.fivem.net/api/servers/single/2e3lgd",

@@ -71,7 +71,7 @@
             this.$router.push('/profile/' + this.UserID);
         },
        async GetUserTag(user_id) {
-            let user = await this.$axios.get('http://localhost:5000/api/user/' + user_id);
+            let user = await this.$axios.get('https://api.fairplay-rp.ro/api/user/' + user_id);
             let userData = user.data;
             if (userData['adminLvl'] == 1) {
                 this.UserTag = "Helper in Teste"
@@ -92,7 +92,7 @@
             }
         },       
         IsUserLogged() {
-            this.$axios.get("http://localhost:5000/api/account", { withCredentials: true }).then((response) => {
+            this.$axios.get("https://api.fairplay-rp.ro/api/account", { withCredentials: true }).then((response) => {
                 if (response.data.status == "success") {
                     this.UserName = response.data.user['username']
                     this.UserID = response.data.user['id']
@@ -104,7 +104,7 @@
             });
         },
         Logout() {
-            this.$axios.get('http://localhost:5000/api/logout', {withCredentials: true})
+            this.$axios.get('https://api.fairplay-rp.ro/api/logout', {withCredentials: true})
             setTimeout(() => {
                 location.reload();
             }, 500);

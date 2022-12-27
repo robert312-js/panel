@@ -2,13 +2,13 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
 	{
-		path: '/bans',
-		component: () => import('../views/Bans/Bans.vue')
-	},
-	{
 		path: '/',
 		name: 'Dashboard',
-		component: import('../views/Dashboard/Dashboard.vue')
+		component: () => import('../views/Dashboard/Dashboard.vue')
+	},
+	{
+		path: '/bans',
+		component: () => import('../views/Bans/Bans.vue')
 	},
 	{
 		path: '/login',

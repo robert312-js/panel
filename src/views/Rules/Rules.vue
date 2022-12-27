@@ -1,6 +1,6 @@
 <template>
 	
-	<div class="dashboard">
+	<rules-page>
 		<rules-Sidebar page="4"/>
 		<div class="rules-content">
 			<rules-Header page="Regulamente Server"/>
@@ -96,14 +96,24 @@
 
 			</div>
 		</div>
-	</div>
+	</rules-page>
 </template>
 
 <script src="./rules.js"></script>
 
 <style lang="css">
-
 @import url('https://fonts.cdnfonts.com/css/akrobat');
+
+rules-page {
+	width: 100%;
+	height: 100%;
+	position: relative;
+	transition: var(--tran-05);
+
+	display: inline-flex;
+	justify-content: left;
+	align-items: left;
+}
 
 .rules-content {
 	width: 100%;

@@ -11,12 +11,6 @@
                     <span class="profession">Roleplay Server</span>
                 </div>
             </div>
-
-			<div class="toggle" @click="ToggleSidebar()">
-				<div class="icon">
-					<fa icon="fa-solid fa-arrow-right" />
-				</div>
-			</div>
         </header>
 
         <div class="menu-bar">
@@ -104,10 +98,6 @@ props: ['page'],
 		};
   },
   methods: {
-	ToggleSidebar() {
-		let navbar = $('.sidebar');
-		navbar.toggleClass("close");
-	},
 	SelectPage(page) {
         console.log(page, this.NavigationButtons[page].AnotherPage)
         if (this.NavigationButtons[page].AnotherPage) {
@@ -116,14 +106,6 @@ props: ['page'],
             this.$router.push(this.NavigationButtons[page].Link).then(() => window.location.reload());
         }
 	}
-  },
-  created() {
-	if (this.page != 0) {
-		this.NavigationButtons[this.page].Active = true;
-	}
-	$.getJSON("https://servers-frontend.fivem.net/api/servers/single/2e3lgd", function (data) {
-		$("#navbar-players").text(data["Data"]["clients"] + " Jucători");
-	});
   },
 };
 

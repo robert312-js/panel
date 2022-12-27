@@ -1,5 +1,5 @@
-import Header from '../components/Header.vue'
-import Sidebar from '../components/Sidebar.vue';
+import Header from '../../components/Header.vue'
+import Sidebar from '../../components/Sidebar.vue';
 
 export default {
   data() {
@@ -22,6 +22,7 @@ export default {
                     {text: "Revenge Kill-ul reprezintă atunci când un jucător îl omoară pe altul, iar după ce primește respawn, se întoarce după același jucător cu scopul de a îl omorî în mai puțin de jumătate de ora."},
                     {text: "Exemple:"},
                     {text: '➤ Ai participat la un roleplay in care tu ai fost omorat de catre cineva, nu primesti revive de la un medic si iti iei respawn la spital. In momentul in care ai primit revive te duci fix in locatia unde ai murit pentru a il omora si tu pe el.'},
+                    {text: "➤ Este strict interzis sa te duci sa cauti persoana care te-a omorat intr-un interval mai mic de 60 de minute."},
                 ]},
                 {id: "1.4 Mixing (MX)", rules: [
                     {text: "Mixing-ul reprezinta transmiterea actiunilor/informatiilor IC in chatul global al server-ului."},
@@ -29,8 +30,8 @@ export default {
                     {text: '➤ Esti la sectia de Politie si scrii pe chat-ul global de pe server: “Poate sa vina cineva sa ma ia si pe mine de la sectie?”.'},
                     {text: '➤ Atunci cand te folosesti de chat-ul global pentru a vinde/cumpara anumite chestii.'},
                 ]},
-                {id: "1.5 Death Match (DM)", rules: [
-                    {text: "Death Match-ul reprezintă când 2 sau mai mulți jucători au început să se împuște ca și cum ar fii într-un joc fără un scop Roleplay."},
+                {id: "1.5 Random Death Match (RDM)", rules: [
+                    {text: "Random Death Match-ul reprezintă când 2 sau mai mulți jucători au început să se împuște ca și cum ar fii într-un joc fără un scop Roleplay."},
                 ]},
                 {id: "1.6 Character Kill (CK)", rules: [
                     {text: "Character Kill-ul sau prescurtat CK reprezintă uciderea unui jucator. Daca un jucator primeste CK, acesta isi va putea schimba identitatea/buletinul si nu va mai putea juca cu acel nume."},
@@ -71,7 +72,7 @@ export default {
                     {text: "COP FEAR sau prescurtat CF este o ramura din regula NO-FEAR si face referinnta la persoanele care nu au frica de politisti. Mai pe intelesul tuturor trebuie sa aveti un comportament civilizat si respectuos fata de Politisti indiferent daca faceti parte dintr-o Organizatie sau nu."},
                     {text: "Exemple:"},
                     {text: '➤ Este strict interzis sa luati la misto un politist indiferent de situatie.'},
-                    {text: '➤ Este strict interzis sa va impuscati / sa va bateti cu DIICOT-UL deoarece in mod normal ar trebui sa rolati frica cand ii vedeti si sa fugiti fara sa va mai uitati in spate sau sa va predati. (Aceasta regula nu se aplica la jafuri de banca / in zonele rau famate in intervalul orar 20 - 08:00 si nu se mai aplica regula in cazul in care va aflati la locatiile ilegale de (Droguri / Etnobotanice / etc) sau in cazul in care va aflati la livrat.).'},
+                    {text: '➤ Este strict interzis sa va impuscati / sa va bateti cu DIICOT-UL deoarece in mod normal ar trebui sa rolati frica cand ii vedeti si sa fugiti fara sa va mai uitati in spate sau sa va predati. (Aceasta regula nu se aplica la jafuri de banca / in zonele rau famate in intervalul orar 20:00 - 08:00 si nu se mai aplica regula in cazul in care va aflati la locatiile ilegale de (Droguri / Etnobotanice / etc) sau in cazul in care va aflati la livrat.).'},
                     {text: '➤ Este strict interzis ca in timpul urmariri sa abuzati de faptul ca politia nu are voie sa mearga la locatiile ilegale.'},		
                 ]},
                 {id: "1.16 TROLLING", rules: [
@@ -113,7 +114,7 @@ export default {
                 {id: "1.26 PIT-STOP", rules: [
                     {text: "Ce inseamna PIT-STOP?: Este o manevra de oprire a masinii prin intrarea in lateral sau in spatele masini pe care vreti sa o opriti."},
                     {text: "➤  Este interzis sa faceti manevra PIT-STOP la o viteza mai mare de 150 Km/h deoarece intr-o situatie reala daca faceti aceasta manevra ar fii sanse extrem de mari ca acea persoana sa moara."},
-                    {text: "➤ Este interzis sa faceti manevra PIT-STOP cu anumite clase de masini exceptand masinile de la CLASA C / CLASA B / CLASA LOWRIDER / Masini Mafie, deoarece in realitate nimeni nu si-ar strica masina de sute de mii de euro doar ca sa il opreasca pe unu."},
+                    {text: "➤ Este interzis sa faceti manevra PIT-STOP cu anumite clase de masini exceptand masinile de la CLASA D / CLASA C / CLASA LOWRIDER / Masini Mafie, deoarece in realitate nimeni nu si-ar strica masina de sute de mii de euro doar ca sa il opreasca pe unu."},
                 ]},
                 {id: "1.27 Tranzactii OOC", rules: [
                     {text: "Nu efectuati plati OOC catre jucatori sau membrii ai staff-ului in schimbul unor bunuri IC (bani, case, masini, etc). Cei care incalca aceasta regula vor fi banati permanent."},
@@ -144,6 +145,7 @@ export default {
                 ]},
                 {id: "1.34 AFK/ REFUZ ROLEPLAY", rules: [
                     {text: "➤ Refuzul unei actiuni roleplay reprezinta refuzul unui jucator de a face roleplay cu alti jucatori, ingreunand astfel actiunile roleplay ale acestora, prin parasirea jocului (/quit sau trecerea jocului in bara - AFK)."},
+                    {text: "➤ Este interzis sa iti mai dati RESPAWN dupa ce ai trecut de usile spitalului."},
                     {text: "➤ Este interzis sa stati AFK mai mult de 5 minute in timp ce sunteti ON-DUTY ca Politist/Medic deoarece se poate considera AFK pentru payday si puteti fi sanctionati ca atare."},
                     {text: "➤ Daca un jucator este AFK, nu aveti voie sa interactionati cu el in niciun fel, aceasta regula se aplica doar in cazul in care jucatorul a fost AFK inainte sa incepeti o anumita actiune cu el, daca jucatorul respectiv s-a pus AFK in timpul actiunii, atunci acesta poate fi reclamat."},
                     {text: "➤ De asemenea, este interzis orice fel de program anti-afk, blocarea tastelor sau orice alta metoda pentru a nu lua kick de la sistemul ANTI-AFK"},
@@ -170,6 +172,11 @@ export default {
                     {text: "➤ Este strict interzis sa aterizati cu un elicopter pe strazi. ( Cu exceptia elicopterelor Smurd / Politie sau in cazul unei defectiuni care necesita aterizare de urgenta)"},
                     {text: "➤ Este strict interzis sa aterizati cu un elicopter pe blocurile din Los Santos cu exceptia blocurilor care detin un HELIPAD"},
                     {text: "➤ Este strict interzis sa aterizati cu un elicopter pe case, indiferent de zona."},
+                    {text: "➤ Sunteti nevoiti sa pastrati o altitudine mare."},
+                    {text: "AVIOANE:"},
+                    {text: "➤ Este strict interzis sa zburati cu avionul deasupra orasului."},
+                    {text: "➤ Este strict interzis sa aterizati cu avionul altundeva inafara de AEROPORT."},
+                    {text: "➤ Sunteti nevoiti sa pastrati o altitudine mare."},
                 ]},
                 {id: "1.36 WARN-URI", rules: [
                     {text: "➤ Odata cu acumularea a 3 avertismente (warn-uri) veti fi banati automat. Warn-urile sunt acordate jucatorilor care incalca anumite reguli si in functie de decizia admin-ului primesc sau nu warn."},
@@ -202,10 +209,10 @@ export default {
                     {text: "➤ Este obligatoriu ca dupa o intelegere/negocieri pe baza unui ostatic sa va tineti de cuvant si sa nu fie o inselaciune la mijloc. Este valabil de ambele parti implicate"},
                     {text: "➤ Este interzis sa aveti pretentii din partea politiei precum sa plece toate echipajele, sa lase toti armele sau exagerari foarte mari."},
                     {text: "➤ Este interzis la jafuri de Banca / Bijuterii sa aveti ostatic."},
+                    {text: "➤ Este interzis sa iei ostatic CIVIL intr-o bataie cu politia."},
                 ]},             
                 {id: "1.41 Live-Streams", rules: [
                     {text: "➤ Nu aveți voie sa instigati la ura prin intermediul subscriberilor"},
-                    {text: "➤ "},
                 ]},
                 {id: "1.42 HOME", rules: [
                     {text: "➤ Folosirea tastei HOME pentru a vedea cine este persoana respectivă este strict interzisa."},
@@ -255,7 +262,8 @@ export default {
                     {text: "Nu aveți voie sa campati morții pentru a aștepta alte echipaje de poliție/medici ca sa ii omorati. Nu aveți voie sa campati locațiile ilegale."},
                 ]},
                 {id: "1.54 TOMBEROANE", rules: [
-                    {text: "Nu aveți voie sa băgați oameni morți în tomberoane. Nu aveți voie sa ieșiți din tomberon cu armă în mână."},
+                    {text: "➤ Nu aveți voie sa băgați oameni morți în tomberoane."},
+                    {text: "➤ Nu aveți voie sa ieșiți din tomberon cu armă în mână."},
                 ]},
                 {id: "1.55 MODURI INTERZISE", rules: [
                     {text: "Modurile Interzise sunt cele care iti pot oferii avantaje, aveți cateva exemple mai jos. Cine folosește astfel de moduri va fi sancționat cu BAN PERMANENT."},
@@ -269,22 +277,25 @@ export default {
                     {text: "➤ Bullet Tracers"},
                     {text: "➤ Kill Effects"},
                 ]},
-                {id: "1.56 Kill & Rob (KR)", rules: [
+                {id: "1.56 ARME DE MAFIE LA CIVILI", rules: [
+                    {text: "➤ Este strict interzis sa folositi armele de mafie daca sunteti civili."},
+                ]},
+                {id: "1.57 Kill & Rob (KR)", rules: [
                     {text: "KILL & ROB, prescurtarea (RB). Acest terment reprezinta jefuirea unui jucator dupa ce l-ai omorat tu sau colegii tai."},
                 ]},
-                {id: "1.57 FREE-CHAT", rules: [
+                {id: "1.58 FREE-CHAT", rules: [
                     {text: "Chat-ul este strict pentru intrebari si nelamuriri, daca folositit chat-ul GLOBAL de pe joc in alte contexte veti fi sanctionati cu mute."},
                 ]},
-                {id: "1.58 Sticky Bomb/Molotov", rules: [
+                {id: "1.59 Sticky Bomb/Molotov", rules: [
                     {text: "Nu aveti voie sa aruncati Sticky Bomb/Molotov inauntrul bancii/bijuteriei, in caz contrar cel care a aruncat va primii CK. (Atunci cand incercati sa aruncati Molotov prin usile bancii/bijuteriei afara si se inchide usa brusc nu se ia in considerare.)"},
                     {text: "Nu aveti voie sa aruncati Sticky Bomb pe trotuarul de la banca sau pe aleea de la bijuterie, in caz contrar cel care a aruncat va primii CK."},
                     {text: "Nu aveti voie sa aruncati Sticky Bomb in interiorul oricarei cladiri, in caz contrar cel care a aruncat va primii CK. (Aceasta regula nu se ia in considerare atunci cand efectuati o actiune terorista aprobata de catre un membru High Staff.)"},
                     {text: "Daca ati aruncat un Molotov inauntru unei cladiri aveti 5 minute din momentul in care primul Molotov a fost aruncat sa evacuati cladirea, in caz contrar toate persoanele care sunt alaturi de cel care a aruncat cu Molotov-ul in cladire si nu au reusit sa evacueze cladirea vor primii CK. (Persoanele in COMA  nu se iau in considerare.)"},
                 ]},
-                {id: "1.59 URMARIRE", rules: [
-                    {text: "Daca urmarirea a inceput intr-o zona publica nu aveti voie sa va duceti in zonele rau famate."},
+                {id: "1.60 URMARIRE", rules: [
+                    {text: "➤ Daca urmarirea a inceput intr-o zona publica nu aveti voie sa va duceti in zonele rau famate."},
                 ]},
-                {id: "1.60 Suferințele (IC) cât și cele (OOC)", rules: [
+                {id: "1.61 Suferințele (IC) cât și cele (OOC)", rules: [
                     {text: "Suferintele sunt strict interzise OOC cat si IC"},
                     {text: "EXEMPLE:"},
                     {text: "➤ Culcat slabule"},
@@ -293,7 +304,7 @@ export default {
                     {text: "➤ La cotet"},
                     {text: "➤ Tot culcati, tot culcati?"},
                 ]},
-                {id: "1.61 Jafuri Persoane", rules: [
+                {id: "1.62 Jafuri Persoane", rules: [
                     {text: "➤ Intervalul orar in care puteti jefuii este 21:00 - 07:00"},
                     {text: "➤ Nu aveti voie sa jefuiti persoanele care fac job legal"},
                     {text: "➤ Nu aveti voie sa jefuiti Politisti / Medici ON DUTY"},
@@ -301,25 +312,31 @@ export default {
                     {text: "➤ Aveti dreptul de a jefuii absolut tot ce are persoana respectiva in inventar, mai putin obiectele de job legal."},
                     {text: "➤ Aveti dreptul de a jefuii absolut tot ce are in portbagaj / torpedo."},
                     {text: "➤ Nu aveti voie sa fortati persoane sa scoata masini din garaj pentru a le controla, respectiv jefuii."},
+                    {text: "➤ Nu aveti voie sa jefuiti arme de mafie/politie."},
+                    {text: "➤ Nu aveti voie sa jefuiti veste/truse medicale."},
+                    {text: "➤ Nu aveti voie sa jefuiti aceasi persoana de mai multe ori intr-un interval mai mic de 2 ore."},
                 ]},
-                {id: "1.62 Jafuri Pacific", rules: [
-                    {text: "➤ Nu aveti voie sa da-ti jaf la Pacific in mai putin de 8 persoane."},
+                {id: "1.63 Jafuri Pacific", rules: [
+                    {text: "➤ Nu aveti voie sa da-ti jaf la Pacific in mai putin de 8 persoane si mai mult de 16 persoane."},
                     {text: "➤ Nu aveti voie sa luati ostatici la jaf la Banca"},
                     {text: "➤ Nu aveti voie sa folositi Sticky Bomb / Molotov in interiorul Bancii"},
                     {text: "➤ Nu aveti voie sa luati ostatici pentru a ii da la schimb pentru persoanele prinse la Jaf Banca."},
                 ]},
-                {id: "1.63 Jafuri Bijuterie", rules: [
-                    {text: "➤ Nu aveti voie sa da-ti jaf la Bijuterie in mai putin de 4 persoane."},
+                {id: "1.64 Jafuri Bijuterie", rules: [
+                    {text: "➤ Nu aveti voie sa da-ti jaf la Bijuterie in mai putin de 4 persoane si mai mult de 12 persoane."},
                     {text: "➤ Nu aveti voie sa luati ostatici la jaf la Bijuterie"},
                     {text: "➤ Nu aveti voie sa folositi Sticky Bomb / Molotov in interiorul Bijuteriei"},
                     {text: "➤ Nu aveti voie sa luati ostatici pentru a ii da la schimb pentru persoanele prinse la Jaf Bijuterie."},
                 ]},
-                {id: "1.64 ACTIUNI ILEGALE IN ZONE PUBLICE", rules: [
+                {id: "1.65 ACTIUNI ILEGALE IN ZONE PUBLICE", rules: [
                     {text: "➤ Actiunile ilegale in zonele publice sunt strict interzise."},
-                    {text: "➤ Aveti voie sa rolati ca va urcati la cineva in masina si sa rolati ca ii puneti cutitu/pistolul la cap/burta doar daca masina are geamuri fumurii cel putin pe geamurile din fata."},
+                    {text: "➤ Aveti voie sa va urcati la cineva in masina si sa rolati ca ii puneti cutitu/pistolul la cap/burta doar daca masina are geamuri fumurii cel putin pe geamurile din fata."},
                     {text: '➤ Nu aveti voie sa va urcati la cineva in masina si sa rolati ca ii puneti cutitu/pistolul la cap/burta in fata sectiei de politie/spital.'},
+                    {text: "➤ Orice bataie cu pumnii in zonele publice se considera actiune ilegala in zona publica."},
+                    {text: "➤ O actiune ilegala se poate petrece pe autostrada in intervalul orar 22:00 - 08:00 doar intr-un interval mai mic de 1 minut, iar aceasta nu trebuie sa fie langa iesirile/intrarile din orase."},
                 ]},
             ],
+
             'politie': [
                 {id: "Regulament General", rules: [
                     {id: "1.1", text: "Nu este permisa coruptia IC nici OOC."},
@@ -338,8 +355,8 @@ export default {
                     {id: "1.14", text: "Transportul de detinuti se efectueaza in cazul in care este un numar de 4 suspecti plus la celule sau depaseste o sentinta de 60 de minute, transportul se efectueaza cu aprobarea  unui Inspector."},
                     {id: "1.15", text: "Nu aveti voie sa opriti o persoana care circula regulamentar, acestia trebuie sa fie opriti doar daca au incalcat codul penal."},
                     {id: "1.16", text: "Nu aveti voie sa plecati singuri in patrula, exceptie facand cazurile cand primiti aprobare de la un Inspector+."},
-                    {id: "1.17", text: "Nu aveti voie sa purtati absolut niciun tip de masca OFF-DUTY nici ON-DUTY (Exceptie D.I.I.C.O.T.)."},
-                    {id: "1.17.1",text: "Persoanele care detin functia de 'CADET' nu au voie sa plece singuri in patrula neinsotit de un politist mai experimentat sau unul de acelasi grad."},
+                       {id: "1.17", text: "Nu aveti voie sa purtati absolut niciun tip de masca OFF-DUTY nici ON-DUTY (Exceptie D.I.I.C.O.T.)."},
+                       {id: "1.17.1",text: "Persoanele care detin functia de 'CADET' nu au voie sa plece singuri in patrula neinsotit de un politist mai experimentat sau unul de acelasi grad."},
                     {id: "1.18", text: "Politistii au obligatia sa se prezinte atunci cand interactioneaza cu un alt player dupa urmatorul model: (Grad-ul) (Numele) (Exemplu: Buna ziua/seara/dimineata, Chestor General Fernando Martinez din cadrul politie Los Santos)"},
                     {id: "1.19", text: "Nu aveti voie sa mergeti cu alte masini, decat cele de la gradul vostru."},
                     {id: "1.20", text: "Nu aveti voie sa folositi alte arme, decat cele de la gradul vostru."},

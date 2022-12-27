@@ -407,7 +407,7 @@
                                         <td>{{data.name}}</td>
                                         <td>{{data.amount}}</td>
                                         <td>
-                                            <div class="delete-button">
+                                            <div class="delete-button" @click="DeletePlayerItem(data.name, data.amount)">
                                                 <fa icon="fa-solid fa-trash" />
                                             </div>
                                         </td>
@@ -479,6 +479,11 @@
                         <tr v-for="(data, index) in VehChestData">
                             <td>{{index}}</td>
                             <td>{{data.amount}}</td>
+                            <td>
+                                <div class="delete-button">
+                                    <fa icon="fa-solid fa-trash" />
+                                </div>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -1776,24 +1781,24 @@
     overflow-x: hidden;
 }
 
- .vehicle-prompt-wrapper .vehicle-prompt .inventory-data::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-  .vehicle-prompt-wrapper .vehicle-prompt .inventory-data::-webkit-scrollbar-track {
-    border-radius: 10px;
-    background: rgba(0,0,0,0.1);
-  }
-  .vehicle-prompt-wrapper .vehicle-prompt .inventory-data::-webkit-scrollbar-thumb{
-    border-radius: 10px;
-    background: rgba(0,0,0,0.2);
-  }
-  .vehicle-prompt-wrapper .vehicle-prompt .inventory-data::-webkit-scrollbar-thumb:hover{
-  	background: rgba(0,0,0,0.4);
-  }
-  .vehicle-prompt-wrapper .vehicle-prompt .inventory-data::-webkit-scrollbar-thumb:active{
-  	background: rgba(0,0,0,.9);
-  }
+.vehicle-prompt-wrapper .vehicle-prompt .inventory-data::-webkit-scrollbar {
+   width: 6px;
+   height: 6px;
+ }
+ .vehicle-prompt-wrapper .vehicle-prompt .inventory-data::-webkit-scrollbar-track {
+   border-radius: 10px;
+   background: rgba(0,0,0,0.1);
+ }
+ .vehicle-prompt-wrapper .vehicle-prompt .inventory-data::-webkit-scrollbar-thumb{
+   border-radius: 10px;
+   background: rgba(0,0,0,0.2);
+ }
+ .vehicle-prompt-wrapper .vehicle-prompt .inventory-data::-webkit-scrollbar-thumb:hover{
+ 	background: rgba(0,0,0,0.4);
+ }
+ .vehicle-prompt-wrapper .vehicle-prompt .inventory-data::-webkit-scrollbar-thumb:active{
+ 	background: rgba(0,0,0,.9);
+ }
 
 .vehicle-prompt-wrapper .vehicle-prompt  .inventory-data .styled-table {
     font-size: 0.9em;
@@ -1826,6 +1831,19 @@
     border-bottom: 1px solid #dddddd20;
 }
 
+.vehicle-prompt-wrapper .vehicle-prompt  .inventory-data .styled-table tbody td .delete-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .55vw;
+    color: #ffffffc2;
+    font-size: 1.7vh;
+    font-weight: 600;
+    transition: 1s all;
+}
 
+.vehicle-prompt-wrapper .vehicle-prompt  .inventory-data .styled-table tbody td .delete-button:hover {
+    opacity: .5;
+}
 
 </style>
