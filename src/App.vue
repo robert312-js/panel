@@ -46,8 +46,8 @@
 .dashboard{
 	width: 100%;
 	height: 100%;
-	position: relative;
 	transition: var(--tran-05);
+	overflow: auto;
 
 	display: inline-flex;
 	justify-content: left;

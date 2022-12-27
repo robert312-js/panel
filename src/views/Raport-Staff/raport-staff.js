@@ -19,7 +19,7 @@ export default {
   },
   methods: {
     async GetStaffActivity() {
-      let users = await this.$axios.get("https://fairplay-rp.ro/api/staff");
+      let users = await this.$axios.get("http://localhost:5000/api/staff");
       const PageData = users.data;
       const usersData = [];
       PageData.forEach((staffraport) => {
@@ -74,7 +74,7 @@ export default {
         if (result.isConfirmed) {
           let command = "resetrapoarte";
           this.$axios.post(
-            "https://fairplay-rp.ro/api/rcon",
+            "http://localhost:5000/api/rcon",
             { command: command },
             { withCredentials: true }
           );
@@ -91,7 +91,7 @@ export default {
     },
     async hasUserAdmin() {
       this.$axios
-        .get("https://fairplay-rp.ro/api/admin", { withCredentials: true })
+        .get("http://localhost:5000/api/admin", { withCredentials: true })
         .then((response) => {
           if (response.data.isAdmin) {
             this.IsUserAdmin = response.data["adminLvl"];

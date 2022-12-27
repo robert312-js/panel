@@ -9,6 +9,14 @@ export default {
       userPunishLog: [],
       userHistory: [],
       UserLogs: [],
+      UserItemsData: [],
+      VehChestData: [],
+      // Prompt Data
+      promptData: {
+        active: false,
+        title: "",
+        fields: {},
+      },
       LogTypes: [
         // Money Logs
         {
@@ -328,7 +336,7 @@ export default {
       UserTag: "Jucator",
       hasUserBan: false,
       userBanData: [],
-      CanSeeUserInfo: false,
+      canSeeUserInfo: false,
       adminId: 0,
       IsUserAdmin: 0,
     };
@@ -351,62 +359,39 @@ export default {
       } else if (page == 4) {
         this.UserLogs = [];
         this.CurrentPage = 1;
-        const logs = await this.$axios.get(
-          "https://fairplay-rp.ro/api/serverLogs/" +
-            this.$route.params.id +
-            "/" +
-            "Money"
-        );
+        const logs = await this.$axios.get("http://localhost:5000/api/serverLogs/" + this.$route.params.id + "/" +"Money");
         this.UserLogs = logs.data;
         this.setPages(this.UserLogs);
+      } else if (page == 6) {
+        this.CurrentPage = 1;
+        this.setPages(this.UserItemsData);
       }
     },
     GetDate(timestamp) {
-      var a = new Date(timestamp * 1000);
-      var year = a.getFullYear();
-      var month = a.getMonth();
-      var date = a.getDate();
-      var hour = a.getHours();
-      var min = a.getMinutes();
-      var hour =
-        a.getHours() > 12
-          ? a.getHours() - 12
-          : a.getHours() < 10
-          ? "0" + a.getHours()
-          : a.getHours();
-      var min = a.getMinutes() < 10 ? "0" + a.getMinutes() : a.getMinutes();
-      var time = date + "/" + month + "/" + year + " " + hour + ":" + min;
-      return time;
+      const date = new Date(timestamp * 1000);
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1; // getMonth returns a 0-based index, so we need to add 1
+      const day = date.getDate();
+      const hours = date.getHours();
+      const minutes = date.getMinutes();
+      // Pad the hours and minutes with leading zeros if needed
+      const paddedHours = hours < 10 ? `0${hours}` : hours;
+      const paddedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+      return `${day}/${month}/${year} ${paddedHours}:${paddedMinutes}`;
     },
     async selectSubMenu(type, data, target) {
-      let element = $(".submenu");
-      element.fadeOut();
+      $(".submenu").fadeOut();
       this.Pages = [];
       this.UserLogs = [];
-      if (type && data == false && target == false) {
-        const logs = await this.$axios.get(
-          "https://fairplay-rp.ro/api//serverLogs/" +
-            this.$route.params.id +
-            "/" +
-            type
+    
+      let logs;
+      if (type && !data && !target) {
+        logs = await this.$axios.get(`http://localhost:5000/api/serverLogs/${this.$route.params.id}/${type}`
         );
-        this.UserLogs = logs.data;
-        this.CurrentPage = 1;
-        this.setPages(this.UserLogs);
-      } else if (type && data && target == false) {
-        const logs = await this.$axios.get(
-          "https://fairplay-rp.ro/api/getServerLogsData/" +
-            this.$route.params.id +
-            "/" +
-            type +
-            "/" +
-            data
-        );
-        this.UserLogs = logs.data;
-        this.CurrentPage = 1;
-        this.setPages(this.UserLogs);
+      } else if (type && data && !target) {
+        logs = await this.$axios.get(`http://localhost:5000/api/getServerLogsData/${this.$route.params.id}/${type}/${data}`);
       } else if (type && data && target) {
-        let target = await Swal.fire({
+        const result = await Swal.fire({
           title: "Id-ul jucatorului",
           input: "text",
           inputAttributes: {
@@ -416,165 +401,181 @@ export default {
           confirmButtonText: "Cauta",
           showLoaderOnConfirm: false,
         });
-        let id = parseInt(target.value);
-        const logs = await this.$axios.get(
-          "https://fairplay-rp.ro/api/getServerLogsTarget/" +
-            this.$route.params.id +
-            "/" +
-            type +
-            "/" +
-            data +
-            "/" +
-            id
+        const id = parseInt(result.value);
+        logs = await this.$axios.get(`http://localhost:5000/api/getServerLogsTarget/${this.$route.params.id}/${type}/${data}/${id}`
         );
-        this.UserLogs = logs.data;
-        this.CurrentPage = 1;
-        this.setPages(this.UserLogs);
         Swal.close();
       }
+      this.UserLogs = logs.data;
+      this.CurrentPage = 1;
+      this.setPages(this.UserLogs);
     },
     openSubMenu(event) {
-      let dom = event.target;
-      let element = $(".submenu");
-
-      if (element.css("display") == "none") {
-        element.fadeIn();
-      } else {
-        element.fadeOut();
-      }
-
-      let itemOffset = $(dom).offset();
+      const element = $(".submenu");
+      element.fadeToggle();
+    
+      const itemOffset = $(event.target).offset();
       element.css("top", itemOffset.top + 30);
-
-      let leftOffset = itemOffset.left - element.width() + $(dom).width() + 25;
+    
+      let leftOffset = itemOffset.left - element.width() + $(event.target).width() + 25;
       if (leftOffset + element.width() > $(window).width()) {
         leftOffset = $(window).width() - element.width() - 20;
       }
-      element.css("left", leftOffset);
+      element.css("left", leftOffset);    
     },
     async hasUserAdmin() {
-      this.$axios
-        .get("https://fairplay-rp.ro/api/admin", { withCredentials: true })
-        .then((response) => {
-          if (response.data.isAdmin) {
-            this.IsUserAdmin = response.data["adminLvl"];
-            this.adminId = response.data["adminId"];
-          } else {
-            this.IsUserAdmin = 0;
-          }
-        });
+      try {
+        const response = await this.$axios.get("http://localhost:5000/api/admin", { withCredentials: true });
+        if (response.data.isAdmin) {
+          this.IsUserAdmin = response.data.adminLvl;
+          this.adminId = response.data.adminId;
+          return;
+        }
+        this.IsUserAdmin = 0;
+      } catch (error) {
+        console.error(error);
+      }
     },
     async CanSeeProfileInfo() {
-      this.$axios
-        .get("https://fairplay-rp.ro/api/account", { withCredentials: true })
-        .then((response) => {
-          let userData = response.data.user;
-          if (userData["id"] == this.$route.params.id) {
-            this.CanSeeUserInfo = true;
-          } else {
-            this.$axios
-              .get("https://fairplay-rp.ro/api/admin", {
-                withCredentials: true,
-              })
-              .then((response) => {
-                if (response.data.isAdmin) {
-                  if (response.data["adminLvl"] >= 2) {
-                    this.CanSeeUserInfo = true;
-                  }
-                } else {
-                  this.CanSeeUserInfo = true;
-                }
-              });
-          }
-        });
+      try {
+        const accountResponse = await this.$axios.get("http://localhost:5000/api/account", { withCredentials: true });
+        const userData = accountResponse.data.user;
+        if (userData.id == this.$route.params.id) {
+          this.canSeeUserInfo = true;
+          return;
+        }
+    
+        const adminResponse = await this.$axios.get("http://localhost:5000/api/admin", { withCredentials: true });
+        if (adminResponse.data.isAdmin) {
+          this.canSeeUserInfo = adminResponse.data.adminLvl >= 2;
+          return;
+        } 
+
+        this.canSeeUserInfo = false;
+      } catch (error) {
+        console.error(error);
+      }
     },
     async VerifyUserBan() {
-      if (this.userData["userBans"]) {
-        this.hasUserBan = true;
-        this.userBanData = this.userData["userBans"];
-      } else {
-        this.hasUserBan = false;
+      this.hasUserBan = this.userData.userBans ? true : false;
+      if (this.hasUserBan) {
+        this.userBanData = this.userData.userBans;
+      }
+    },
+    // Prompt Data
+		createPrompt(title, fields) {
+      this.promptData.active = true;
+      var self = this;
+      return new Promise((resolve, reject) => {
+        $(".prompt-layout").fadeIn();
+        this.promptData.title = title;
+        this.promptData.fields = fields;
+        $(document).on("click", '#prompt-button', async function(event) {
+          event.preventDefault();
+          const responses = self.promptData.fields || {};
+          const responseData = {};
+          if (responses.length > 0) {
+            for (const data of responses) {
+              responseData[data.field] = data.text;
+            }
+          }
+          self.hidePrompt();
+          resolve(responseData);
+        });
+      });
+    },
+    hidePrompt() {
+			$(".prompt-layout").fadeOut(200);
+			setTimeout(() => {
+				this.promptData.active = false
+				this.promptData.fields = [];
+			}, 190);
+		},
+    async GetVehicleChest(vehicle, type) {
+      try {
+        let vehicleResponse = await this.$axios.get(`http://localhost:5000/api/getVehicleChest/${this.$route.params.id}/${vehicle}/${type}`);
+        let vehicleData = vehicleResponse.data;
+        if (vehicleData['dvalue'] == undefined) {
+          Swal.fire({
+            title: 'Eroare',
+            text: 'Nu sunt iteme in acest chest!',
+            icon: 'error',
+            confirmButtonText: 'Ok'
+          });
+          return;
+        }
+        this.VehChestData = vehicleData['dvalue'] ? JSON.parse(vehicleData['dvalue']) : [];
+        $('.vehicle-prompt-wrapper').fadeIn();
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    CloseVehiclePrompt() {
+      $('.vehicle-prompt-wrapper').fadeOut();
+      this.VehChestData = [];
+    },
+    async GetUserInventory() {
+      try {
+        const userResponse = await this.$axios.get(`http://localhost:5000/api/getUdata/${this.$route.params.id}`);
+        const uData = userResponse.data;
+        const inventoryData = JSON.parse(uData.dvalue).inventory;
+
+        for (const [key, data] of Object.entries(inventoryData)) {    
+          this.UserItemsData.push({
+            name: key,
+            amount: data.amount,
+          });
+        }
+      } catch (error) {
+        console.error(error);
       }
     },
     GetUserTag() {
-      if (this.userData["adminLvl"] == 1) {
-        this.UserTag = "Helper in Teste";
-      } else if (this.userData["adminLvl"] == 2) {
-        this.UserTag = "Helper";
-      } else if (this.userData["adminLvl"] == 3) {
-        this.UserTag = "Moderator";
-      } else if (this.userData["adminLvl"] == 4) {
-        this.UserTag = "Administrator";
-      } else if (this.userData["adminLvl"] == 5) {
-        this.UserTag = "Developer";
-      } else if (this.userData["adminLvl"] == 6) {
-        this.UserTag = "Co-Fondator";
-      } else if (this.userData["adminLvl"] >= 7) {
-        this.UserTag = "Fondator";
-      } else {
-        this.UserTag = "Jucator";
+      switch (this.userData['adminLvl']) {
+        case 1:
+          this.UserTag = "Helper in Teste";
+          break;
+        case 2:
+          this.UserTag= "Helper";
+          break;
+        case 3:
+          this.UserTag = "Moderator";
+          break;
+        case 4:
+          this.UserTag = "Administrator";
+          break;
+        case 5:
+          this.UserTag = "Developer";
+          break;
+        case 6:
+          this.UserTag = "Co-Fondator";
+          break;
+        case 7:
+        case 8:
+        case 9:
+        case 10:
+          this.UserTag = "Fondator";
+          break;
+        default:
+          this.UserTag = "Jucator";
+          break;
       }
     },
     // Admin Actions
     async RconAction(command) {
-      this.$axios.post(
-        "https://fairplay-rp.ro/api/rcon",
-        { command: command },
-        { withCredentials: true }
-      );
+      this.$axios.post("http://localhost:5000/api/rcon",{ command: command },{ withCredentials: true });
     },
     async BanPlayer() {
-      let reason = await Swal.fire({
-        title: "Motivul banului",
-        input: "text",
-        inputAttributes: {
-          autocapitalize: "off",
-        },
-        showCancelButton: true,
-        confirmButtonText: "OK",
-        showLoaderOnConfirm: false,
-      });
-      let time = await Swal.fire({
-        title: "Timpul banului",
-        input: "text",
-        inputAttributes: {
-          autocapitalize: "off",
-        },
-        showCancelButton: true,
-        confirmButtonText: "OK",
-        showLoaderOnConfirm: false,
-      });
-      let DreptPlata = await Swal.fire({
-        title: "Drept de plata [1 == Nu, 0 == Da]",
-        input: "text",
-        inputAttributes: {
-          autocapitalize: "off",
-        },
-        showCancelButton: true,
-        confirmButtonText: "OK",
-        showLoaderOnConfirm: false,
-      });
-      if (
-        reason.value != null &&
-        time.value != null &&
-        DreptPlata.value != null
-      ) {
-        this.RconAction(
-          "banplayer " +
-            this.$route.params.id +
-            " " +
-            time.value +
-            " " +
-            this.adminId +
-            " " +
-            dreptPlata.value +
-            " " +
-            reason.value
-        );
+        let promptData = await this.createPrompt("BAN PLAYER", [{field: "reason", title:"Motiv"}, {field: "time", title:"Timp"}, {field: "dreptPlata", title:"Drept de plata (1 == DA, 0 == NU)"}]);
+        let reason = promptData ? promptData.reason : null;
+        let time = promptData ? promptData.time : null;
+        let dreptPlata = promptData ? promptData.dreptPlata : null;
+        if (!reason || !time || !dreptPlata) return Swal.fire("Eroare", "Toate campurile sunt obligatorii!", "error");
+
+        this.RconAction("banplayer " + this.$route.params.id + " " + time + " " + this.adminId + " " + dreptPlata +  " " + reason);
         setTimeout(() => {
           window.location.reload();
         }, 1000);
-      }
     },
     UnbanPlayer() {
       Swal.fire({
@@ -587,86 +588,52 @@ export default {
         confirmButtonText: "Unban Player",
       }).then((result) => {
         if (result.isConfirmed) {
-          this.RconAction(
-            "unbanplayer " + this.$route.params.id + " " + this.adminId
-          );
+          this.RconAction("unbanplayer " + this.$route.params.id + " " + this.adminId);
           setTimeout(() => {
             window.location.reload();
           }, 1000);
         }
       });
     },
-    KickPlayer() {
-      Swal.fire({
-        title: "Esti sigur?",
-        text: "Jucatorul va primi kick de pe server!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Kick Player",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.RconAction(
-            "kickplayer " + this.$route.params.id + " " + this.adminId
-          );
-          setTimeout(() => {
-            window.location.reload();
-          }, 1000);
-        }
-      });
-    },
-    async GiveMoney() {
-      let money = await Swal.fire({
-        title: "Suma Oferita",
-        input: "text",
-        inputAttributes: {
-          autocapitalize: "off",
-        },
-        showCancelButton: true,
-        confirmButtonText: "Give Money",
-        showLoaderOnConfirm: false,
-      });
-      this.RconAction("givemoney " + this.$route.params.id + " " + money.value);
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
-    },
-    async GiveCoins() {
-      let coins = await Swal.fire({
-        title: "Suma Oferita",
-        input: "text",
-        inputAttributes: {
-          autocapitalize: "off",
-        },
-        showCancelButton: true,
-        confirmButtonText: "Give Coins",
-        showLoaderOnConfirm: false,
-      });
-      this.RconAction("givecoins " + this.$route.params.id + " " + coins.value);
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
-    },
-    async SetAdmin() {
-      let adminLvl = await Swal.fire({
-        title: "Admin Level",
-        input: "text",
-        inputAttributes: {
-          autocapitalize: "off",
-        },
-        showCancelButton: true,
-        confirmButtonText: "Set Admin Level",
-        showLoaderOnConfirm: false,
-      });
-      if (adminLvl.value >= 0) {
-        this.RconAction(
-          "setadmin " + this.$route.params.id + " " + adminLvl.value
-        );
+    async KickPlayer() {
+      let promptData = await this.createPrompt("Unban Player", [{field: "reason", title:"Motiv"}]);
+      let reason = promptData ? promptData['reason'] : null;
+      if (reason != null) {
+        this.RconAction("kickplayer " + this.$route.params.id + " " + this.adminId + " " + reason);
         setTimeout(() => {
           window.location.reload();
         }, 1000);
       }
+    },
+    async GiveMoney() {
+      let promptData = await this.createPrompt("GIVE MONEY", [{field: "money", title:"Suma Oferita"}]);
+      let money = promptData ? promptData['money'] : null;
+      if (money != null) {
+        this.RconAction("givemoney " + this.$route.params.id + " " + money);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      };
+    },
+    async GiveCoins() {
+      let promptData = await this.createPrompt("GIVE COINS", [{field: "coins", title:"Suma Oferita"}]);
+      let coins = promptData ? promptData['coins'] : null;
+      if (coins != null) {
+        this.RconAction("givecoins " + this.$route.params.id + " " + coins);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      };
+    },
+    async SetAdmin() {
+      let promptData = await this.createPrompt("GIVE COINS", [{field: "admin", title:"Admin Level"}]);
+      let admin = promptData ? promptData['admin'] : null;
+      if (admin != null) {
+        this.RconAction("setadmin " + this.$route.params.id + " " + admin);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      };
     },
     // Paginations
     CurrentPagePlus() {
@@ -695,62 +662,49 @@ export default {
   },
   computed: {
     PlayerHistory() {
-      return this.paginate(this.userHistory).sort(
-        (x, y) => +new Date(y.time) - +new Date(x.time)
-      );
+      return this.paginate(this.userHistory).sort( (x, y) => +new Date(y.time) - +new Date(x.time));
     },
     PunishLog() {
-      return this.paginate(this.userPunishLog).sort(
-        (x, y) => +new Date(y.time) - +new Date(x.time)
-      );
+      return this.paginate(this.userPunishLog).sort((x, y) => +new Date(y.time) - +new Date(x.time));
     },
     LogsData() {
-      return this.paginate(this.UserLogs).sort(
-        (x, y) => +new Date(y.time) - +new Date(x.time)
-      );
+      return this.paginate(this.UserLogs)
     },
     GetSelectedPage() {
       return this.CurrentPage;
     },
+    GetUserItems() {
+      return this.paginate(this.UserItemsData);
+    },
     HoursPlayed() {
-      let hours = this.userData["hoursPlayed"];
-      return hours.toFixed(2);
+      const hours = this.userData["hoursPlayed"];
+      return hours ? hours.toFixed(2) : "0.00";
     },
     GetUserCharacterName() {
-      if (this.userData["userIdentity"] != null) {
-        return (
-          this.userData["userIdentity"]["firstName"] +
-          " " +
-          this.userData["userIdentity"]["secondName"]
-        );
-      } else {
-        return "Necunoscut";
-      }
+      return this.userData.userIdentity ? `${this.userData.userIdentity.firstName} ${this.userData.userIdentity.secondName}` : "Necunoscut";
     },
     GetUserAge() {
-      if (this.userData["userIdentity"]) {
-        return this.userData["userIdentity"]["age"];
-      } else {
-        return "18";
-      }
+      return this.userData.userIdentity ? this.userData.userIdentity.age : "18";
     },
     BankMoney() {
+      const money = this.userData.userMoney ? this.userData.userMoney.bankMoney : 0;
       const moneyFormat = new Intl.NumberFormat("us-US", {
         style: "currency",
         currency: "USD",
         maximumFractionDigits: 0,
         minimumFractionDigits: 0,
       });
-      return moneyFormat.format(this.userData["userMoney"]["bankMoney"]);
+      return moneyFormat.format(money);
     },
     CashMoney() {
+      const money = this.userData.userMoney ? this.userData.userMoney.walletMoney : 0;
       const moneyFormat = new Intl.NumberFormat("us-US", {
         style: "currency",
         currency: "USD",
         maximumFractionDigits: 0,
         minimumFractionDigits: 0,
       });
-      return moneyFormat.format(this.userData["userMoney"]["walletMoney"]);
+      return moneyFormat.format(money);
     },
   },
   async created() {
@@ -767,28 +721,27 @@ export default {
     setTimeout(() => {
       loader.hide();
     }, 2000);
+  
+    try {
+      const userResponse = await this.$axios.get(`http://localhost:5000/api/user/${this.$route.params.id}`);
+      this.userData = userResponse.data;
+  
+      const punishResponse = await this.$axios.get(`http://localhost:5000/api/userpunishlog/${this.$route.params.id}`);
+      this.userPunishLog = punishResponse.data;
+  
+      const historyResponse = await this.$axios.get(`http://localhost:5000/api/userhistory/${this.$route.params.id}`);
+      this.userHistory = historyResponse.data;
+  
+      const vehsResponse = await this.$axios.get(`http://localhost:5000/api/uservehicles/${this.$route.params.id}`);
+      this.userVehicles = vehsResponse.data;
+    } catch (error) {
+      console.error(error);
+    }
 
     this.CanSeeProfileInfo();
     this.hasUserAdmin();
-
-    let user = await this.$axios.get(
-      "https://fairplay-rp.ro/api/user/" + this.$route.params.id
-    );
-    this.userData = user.data;
-    let punish = await this.$axios.get(
-      "https://fairplay-rp.ro/api/userpunishlog/" + this.$route.params.id
-    );
-    this.userPunishLog = punish.data;
-    let history = await this.$axios.get(
-      "https://fairplay-rp.ro/api/userhistory/" + this.$route.params.id
-    );
-    this.userHistory = history.data;
-    let vehs = await this.$axios.get(
-      "https://fairplay-rp.ro/api/uservehicles/" + this.$route.params.id
-    );
-    this.userVehicles = vehs.data;
-
-    this.VerifyUserBan(); // Check if user is banned
-    this.GetUserTag(); // Get user tag
-  },
+    this.VerifyUserBan();
+    this.GetUserTag();
+    this.GetUserInventory();
+  }
 };

@@ -159,7 +159,6 @@
 		justify-content: center;
 		align-items: center;
 		gap: 1vw;
-
 		padding: 1vh 5vh;
 	}
 

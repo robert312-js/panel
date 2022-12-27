@@ -16,23 +16,19 @@ export default {
   },
   methods: {
     async GetBans() {
-      let users = await this.$axios.get("https://fairplay-rp.ro/api/users");
-      const UsersData = users.data;
-      const bansData = [];
-      UsersData.forEach((user) => {
-        if (user["userBans"]) {
-          bansData.push({
-            id: user.id,
-            username: user.username,
-            userBans: user.userBans,
-          });
-        }
-      });
-      this.UsersBans = bansData.sort(
-        (x, y) =>
-          +new Date(y["userBans"].banDate) - +new Date(x["userBans"].banDate)
-      );
-      this.setPages(this.UsersBans);
+      try {
+        const usersResponse = await this.$axios.get("http://localhost:5000/api/users");
+        const UsersData = usersResponse.data;
+        const bansData = UsersData.filter(user => user.userBans).map(user => ({
+          id: user.id,
+          username: user.username,
+          userBans: user.userBans,
+        }));
+        this.UsersBans = bansData.sort((x, y) => +new Date(y.userBans.banDate) - +new Date(x.userBans.banDate));
+        this.setPages(this.UsersBans);
+      } catch (error) {
+        console.error(error);
+      }
     },
     GetDate(timestamp) {
       var a = new Date(timestamp * 1000);
@@ -49,9 +45,10 @@ export default {
     GoToProfile(id) {
       this.$router.push("/profile/" + id);
     },
+
+    
     // Paginations
     PagePlus() {
-      console.log(this.Pages.length);
       if (this.CurrentPage < this.Pages.length) {
         console.log(this.CurrentPage);
         this.CurrentPage++;

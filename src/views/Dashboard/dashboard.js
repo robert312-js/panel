@@ -16,12 +16,9 @@ export default {
     "Dashboard-Sidebar": Sidebar,
   },
   methods: {
-    GetDate(timestamp) {
-      var date = new Date(timestamp * 1000);
-      return date.toLocaleDateString("en-GB");
-    },
     GetActionName(id) {
-      return this.UsersData.filter((data) => data.id == id)[0]["username"];
+      const userData = this.UsersData.find(data => data.id === id);
+      return userData ? userData.username : "Necunoscut";
     },
     GoToRules() {
       this.$router.push("/rules");
@@ -33,12 +30,7 @@ export default {
       var date = a.getDate();
       var hour = a.getHours();
       var min = a.getMinutes();
-      var hour =
-        a.getHours() > 12
-          ? a.getHours() - 12
-          : a.getHours() < 10
-          ? "0" + a.getHours()
-          : a.getHours();
+      var hour = a.getHours() > 12 ? a.getHours() - 12 : a.getHours() < 10 ? "0" + a.getHours() : a.getHours();
       var min = a.getMinutes() < 10 ? "0" + a.getMinutes() : a.getMinutes();
       var time = date + "/" + month + "/" + year + " " + hour + ":" + min;
       return time;
@@ -61,23 +53,23 @@ export default {
     setTimeout(() => {
       loader.hide();
     }, 2000);
-    const actions = await this.$axios.get(
-      "https://fairplay-rp.ro/api/recentactions"
-    );
-    this.RecentActions = actions.data
-      .sort((x, y) => +new Date(y.time) - +new Date(x.time))
-      .slice(0, 5);
-    let users = await this.$axios.get("https://fairplay-rp.ro/api/users");
-
-    this.UsersData = users.data;
-    this.TopPlayers = this.UsersData.sort(
-      (x, y) => y.hoursPlayed - x.hoursPlayed
-    ).slice(0, 5);
-    let vehicles = await this.$axios.get("https://fairplay-rp.ro/api/vehicles");
-    this.serverVehicles = vehicles.data;
-
-    $.getJSON(
-      "https://servers-frontend.fivem.net/api/servers/single/2e3lgd",
+  
+    try {
+      const actionsResponse = await this.$axios.get("http://localhost:5000/api/recentactions");
+      this.RecentActions = actionsResponse.data.sort((x, y) => +new Date(y.time) - +new Date(x.time)).slice(0, 5);
+      const usersResponse = await this.$axios.get("http://localhost:5000/api/users");
+      this.UsersData = usersResponse.data;
+      this.TopPlayers = this.UsersData.sort(
+        (x, y) => y.hoursPlayed - x.hoursPlayed
+      ).slice(0, 5);
+  
+      const vehiclesResponse = await this.$axios.get("http://localhost:5000/api/vehicles");
+      this.serverVehicles = vehiclesResponse.data;
+    } catch (error) {
+      console.error(error);
+    };
+  
+    $.getJSON("https://servers-frontend.fivem.net/api/servers/single/2e3lgd",
       function (data) {
         $("#dashboard-players").text(
           data["Data"]["clients"] + "/" + data["Data"]["sv_maxclients"]
@@ -87,27 +79,14 @@ export default {
   },
   computed: {
     IntregistratedUsers() {
-      let counter = 0;
-      this.UsersData.forEach((data) => {
-        counter++;
-      });
-      return counter.toLocaleString(undefined, { minimumFractionDigits: 0 });
+      return this.UsersData.length.toLocaleString(undefined, { minimumFractionDigits: 0 });
     },
     GetVipUsers() {
-      let counter = 0;
-      this.UsersData.forEach((data) => {
-        if (data.vipLvl > 1) {
-          counter++;
-        }
-      });
-      return counter.toLocaleString(undefined, { minimumFractionDigits: 0 });
+      const vipUsers = this.UsersData.filter(data => data.vipLvl > 1);
+      return vipUsers.length.toLocaleString(undefined, { minimumFractionDigits: 0 });
     },
     GetVehiclesNumber() {
-      let counter = 0;
-      this.serverVehicles.forEach((data) => {
-        counter++;
-      });
-      return counter.toLocaleString(undefined, { minimumFractionDigits: 0 });
+      return this.serverVehicles.length.toLocaleString(undefined, { minimumFractionDigits: 0 });
     },
     GetOnlinePlayers() {
       $.getJSON(

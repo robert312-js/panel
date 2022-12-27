@@ -107,11 +107,11 @@
                             <fa icon="fa-solid fa-car" />
                             <p>Vehicule</p>
                         </div>
-                        <div class="navbar-button" @click="SelectInfoCurrentPage(2)" v-if="CanSeeUserInfo">
+                        <div class="navbar-button" @click="SelectInfoCurrentPage(2)" v-if="canSeeUserInfo">
                             <fa icon="fa-solid fa-clock-rotate-left" />
                             <p>Istoric</p>
                         </div>
-                        <div class="navbar-button" @click="SelectInfoCurrentPage(3)" v-if="CanSeeUserInfo">
+                        <div class="navbar-button" @click="SelectInfoCurrentPage(3)" v-if="canSeeUserInfo">
                             <fa icon="fa-solid fa-ban" />
                             <p>Punish Log</p>
                         </div>
@@ -122,6 +122,10 @@
                         <div class="navbar-button" @click="SelectInfoCurrentPage(5)" v-if="IsUserAdmin >= 1">
                             <fa icon="fa-solid fa-list" />
                             <p>Admin Actions</p>
+                        </div>
+                        <div class="navbar-button" @click="SelectInfoCurrentPage(6)" v-if="IsUserAdmin >= 1">
+                            <fa icon="fa-solid fa-list" />
+                            <p>Inventar</p>
                         </div>
                     </div>
     
@@ -151,8 +155,11 @@
                                 </div>
     
                                 <div class="vehicle-status">
-                                    <div class="premium" v-if="data.premium">
-                                        <fa icon="fa-solid fa-star" />
+                                    <div class="chest-button" v-if="IsUserAdmin >= 3" @click="GetVehicleChest(data.vehicle, 'chest')">
+                                        <fa icon="fa-solid fa-box" />
+                                    </div>
+                                    <div class="glove-chest"  v-if="IsUserAdmin >= 3" @click="GetVehicleChest(data.vehicle, 'glove_chest')">
+                                        <fa icon="fa-solid fa-box-open" />
                                     </div>
                                 </div>
                             </div>
@@ -380,10 +387,104 @@
                             </div>
                         </div>
                     </div>
+                    <div class="profile-actions-inventory" v-if="InfoCurrentPage == 6">
+                        <div class="profile-inventory-header">
+                            <h1>Inventory Data</h1>
+                            <p>Vizualizezi toate itemele pe care {{userData['username']}} le detine.</p>
+                        </div>
+                        <div class="actions-hr"></div>
+
+                        <div class="inventory-data">
+                            <table class="styled-table">
+                                <thead>
+                                    <tr>
+                                        <th>Item Key</th>
+                                        <th>Cantitate Detinute</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(data, index) in GetUserItems">
+                                        <td>{{data.name}}</td>
+                                        <td>{{data.amount}}</td>
+                                        <td>
+                                            <div class="delete-button">
+                                                <fa icon="fa-solid fa-trash" />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="pagination">
+                            <div class="page-button" @click="CurrentPageMinus()">
+                                <div class="icon">
+                                    <fa icon="fa-solid fa-angle-left" />
+                                </div>
+                            </div>
+                            <div class="page-selected">{{GetSelectedPage}}</div>
+                            <div class="page-button" @click="CurrentPagePlus()">
+                                <div class="icon">
+                                    <fa icon="fa-solid fa-chevron-right" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
-    </div>    
+    </div>
+    
+    <div class="prompt-layout" style="display:none;">
+        <div class="prompt-menu">
+            <div class="head-texts">
+                <h1>PROMPT MENU</h1>
+                <span>{{promptData.title}}</span>
+            </div>
+
+            <div class="input-fields">
+                <div class="field" v-for="(item, index) in promptData.fields">
+                    <strong>{{item.title}}</strong>
+                    <input v-model="item.text" placeholder="Raspunsul tau">
+                </div>
+            </div>
+            <div class="confirm-prompt" id="prompt-button">
+                <p>CONFIRMARE</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="vehicle-prompt-wrapper" style="display:none;">
+        <div class="vehicle-prompt">
+            <div class="profile-inventory-header">
+                <div class="header-texts">
+                    <h1>Inventory Data</h1>
+                    <p>Vizualizezi toate itemele pe care {{userData['username']}} le detine.</p>
+                </div>
+                <div class="close-button">
+                    <fa icon="fa-solid fa-times" @click="CloseVehiclePrompt()" />
+                </div>
+            </div>
+            <div class="actions-hr"></div>
+
+            <div class="inventory-data">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Item Key</th>
+                            <th>Cantitate Detinute</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(data, index) in VehChestData">
+                            <td>{{index}}</td>
+                            <td>{{data.amount}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script src="./profile.js"></script>
@@ -400,6 +501,7 @@
 	align-items: center;
 	gap: 1vw;
 	padding: 1vh 5vh;
+    user-select: none;
 }
 
 .profile-container .profile-wrapper {
@@ -695,6 +797,94 @@
     user-select: none;
     background-color: var(--panel-accent-color-hover);
     transition: 1s all;
+}
+
+/** Profile Inventory Data */
+
+.profile-actions-wrapper .profile-actions-inventory {
+    width: 95vh;
+    height: 65vh;
+    background-color: var(--panel-color);
+    border-radius: .50vw;
+    padding: 1.5rem;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items: left;
+    gap: .8vw;
+}
+
+.profile-actions-wrapper .profile-actions-inventory .profile-inventory-header h1 {
+    font-family: 'Poppins';
+    font-size: 1.2rem;
+    color: var(--text-color);
+}
+
+.profile-actions-wrapper .profile-actions-inventory .profile-inventory-header p {
+    font-family: 'Poppins';
+    font-size: .7rem;
+    color: var(--text-color);
+    opacity: .7;
+}
+
+.profile-actions-wrapper .profile-actions-inventory .actions-hr {
+    opacity: .25;
+    width: 100%;
+    height: 0.2vh;
+    border-radius: 0.25vw;
+    background-color: var(--panel-border-color);
+}
+
+.profile-actions-wrapper .profile-actions-inventory .inventory-data {
+    height: 100%;
+    width: 100%;
+}
+
+.profile-actions-wrapper .profile-actions-inventory .inventory-data .styled-table {
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 100%;
+	border-collapse: collapse;
+}
+
+.profile-actions-wrapper .profile-actions-inventory .inventory-data .styled-table thead {
+	color: var(--text-color);
+	text-align: left;
+}
+
+.styled-table thead tr {
+    color: #ffffff;
+    text-align: left;
+}
+
+.profile-actions-wrapper .profile-actions-inventory .inventory-data .styled-table th,
+.profile-actions-wrapper .profile-actions-inventory .inventory-data .styled-table td {
+    padding: 12px 20px;
+}
+
+.profile-actions-wrapper .profile-actions-inventory .inventory-data .styled-table td {
+	padding: 2vh 2vh;
+	color: white; 
+}
+
+.styled-table tbody td .delete-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .55vw;
+    color: #ffffffc2;
+    font-size: 1.7vh;
+    font-weight: 600;
+    transition: 1s all;
+}
+
+.styled-table tbody td .delete-button:hover {
+    opacity: .5;
+}
+
+.profile-actions-wrapper .profile-actions-inventory .inventory-data .styled-table tbody tr {
+    border-bottom: 1px solid #dddddd20;
 }
 
 /** Profile History Info */
@@ -1353,6 +1543,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    user-select: none;
     border: 1px solid var(--pagination-accent-color);
     border-radius: .25vw;
 }
@@ -1377,5 +1568,264 @@
 .pagination .page-button:hover {
   background-color: #2988c8;
 }
+.prompt-layout {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: .9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+}
+
+.prompt-layout>.prompt-menu {
+    width: 50.5vh;
+    padding: 1vh;
+    padding-bottom: 5.5vh;
+    font-family: "Akrobat";
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1vh;    
+    background-color: #1a1d1f;
+    border-radius: .50vw;
+    border: 1px solid #ffffff30;
+}
+
+.prompt-layout>.prompt-menu>.head-texts {
+    display: flex;
+    flex-direction: column;
+    gap: .15vh;
+    justify-content: center;
+    align-items: center;
+    color: #FFF;
+}
+
+.prompt-layout>.prompt-menu>.head-texts>h1 {
+    margin-top: 4vh;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 3.95vh;
+    line-height: 120%;
+    text-align: left;
+    text-transform: uppercase;
+    color: #FFF
+}
+
+.prompt-layout>.prompt-menu>.head-texts>span {
+    font-family: 'Akrobat';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 1.9vh;
+    line-height: 120%;
+    text-transform: uppercase;
+    color: #FFDE2A;
+    text-align: left;
+    letter-spacing: 1vh
+}
+
+.prompt-layout>.prompt-menu>.input-fields {
+    display: flex;
+    flex-direction: column;
+    justify-self: center;
+    padding: 2vh 0;
+    align-self: center;
+    margin-top: 5%;
+    width: 85%;
+    gap: .15vh;
+    color: #FFFFFF90;
+}
+
+.prompt-layout>.prompt-menu>.input-fields>.field {
+    width: 100%;
+    padding: 1vh;
+    display: flex;
+    flex-direction: column;
+    gap: 1vh
+}
+
+.prompt-layout>.prompt-menu>.input-fields>.field>strong {
+    font-size: 1.35em;
+    text-transform: uppercase
+}
+
+.prompt-layout>.prompt-menu>.input-fields>.field>input {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: .7vh;
+    outline: none;
+    border: none;
+    color: #fff;
+    text-align: center;
+    width: 100%;
+    height: 7.4vh;
+    padding: 0 .85vw;
+    font-family: "Akrobat";
+    letter-spacing: .15vh;
+    font-size: 1.15em
+}
+
+.prompt-layout>.prompt-menu>.input-fields>.field>input::placeholder {
+    text-transform: uppercase;
+    font-family: "Akrobat";
+    letter-spacing: .25vh;
+    font-size: 1.05em
+}
+
+.prompt-layout>.prompt-menu>.confirm-prompt {
+    width: 29vh;
+    height: 8vh;
+    background: #292d2f;
+    border-radius: .5vh;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 1s;
+    margin-top: 5%;
+    color: #ffffff80;
+}
+
+.prompt-layout>.prompt-menu>.confirm-prompt>p {
+    font-size: 1.85em;
+    font-weight: 700;
+    letter-spacing: .25vh
+}
+
+.prompt-layout>.prompt-menu>.confirm-prompt:hover {
+    transform: scale(95%);
+    opacity: .75
+}
+
+.vehicle-prompt-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+}
+
+.vehicle-prompt-wrapper .vehicle-prompt {
+    width: 120.5vh;
+    height: 80.5vh;
+    padding: 1.5rem;
+    font-family: "Akrobat";
+    background-color: #1a1d1f;
+    border-radius: .50vw;
+    border: 1px solid #ffffff30;
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items: left;
+    gap: .8vw;
+}
+
+.vehicle-prompt-wrapper .vehicle-prompt .profile-inventory-header {
+    display: inline-flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.vehicle-prompt-wrapper .vehicle-prompt .profile-inventory-header .close-button {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: .50vw;
+    background-color: #292d2f;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    color: #ffffff80;
+}
+
+.vehicle-prompt-wrapper .vehicle-prompt .profile-inventory-header .close-button:hover {
+    opacity: .7;
+}
+
+.vehicle-prompt-wrapper .vehicle-prompt .profile-inventory-header .header-texts h1 {
+    font-family: 'Poppins';
+    font-size: 1.2rem;
+    color: var(--text-color);
+}
+
+.vehicle-prompt-wrapper .vehicle-prompt .profile-inventory-header .header-texts p {
+    font-family: 'Poppins';
+    font-size: .7rem;
+    color: var(--text-color);
+    opacity: .7;
+}
+
+.vehicle-prompt-wrapper .vehicle-prompt  .actions-hr{
+    opacity: .25;
+    width: 100%;
+    height: 0.2vh;
+    border-radius: 0.25vw;
+    background-color: var(--panel-border-color);
+}
+
+.vehicle-prompt-wrapper .vehicle-prompt .inventory-data{
+    height: 100%;
+    width: 100%;
+    overflow: scroll;
+    overflow-x: hidden;
+}
+
+ .vehicle-prompt-wrapper .vehicle-prompt .inventory-data::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .vehicle-prompt-wrapper .vehicle-prompt .inventory-data::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background: rgba(0,0,0,0.1);
+  }
+  .vehicle-prompt-wrapper .vehicle-prompt .inventory-data::-webkit-scrollbar-thumb{
+    border-radius: 10px;
+    background: rgba(0,0,0,0.2);
+  }
+  .vehicle-prompt-wrapper .vehicle-prompt .inventory-data::-webkit-scrollbar-thumb:hover{
+  	background: rgba(0,0,0,0.4);
+  }
+  .vehicle-prompt-wrapper .vehicle-prompt .inventory-data::-webkit-scrollbar-thumb:active{
+  	background: rgba(0,0,0,.9);
+  }
+
+.vehicle-prompt-wrapper .vehicle-prompt  .inventory-data .styled-table {
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 100%;
+	border-collapse: collapse;
+}
+
+.vehicle-prompt-wrapper .vehicle-prompt .inventory-data .styled-table thead {
+	color: var(--text-color);
+	text-align: left;
+}
+
+.vehicle-prompt-wrapper .vehicle-prompt .inventory-data .styled-table thead tr {
+    color: #ffffff;
+    text-align: left;
+}
+
+.vehicle-prompt-wrapper .vehicle-prompt  .inventory-data .styled-table th,
+.vehicle-prompt-wrapper .vehicle-prompt  .inventory-data .styled-table td {
+    padding: 12px 20px;
+}
+
+.vehicle-prompt-wrapper .vehicle-prompt  .inventory-data .styled-table td {
+	padding: 2vh 2vh;
+	color: white; 
+}
+
+.vehicle-prompt-wrapper .vehicle-prompt  .inventory-data .styled-table tbody tr {
+    border-bottom: 1px solid #dddddd20;
+}
+
+
 
 </style>
