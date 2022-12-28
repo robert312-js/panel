@@ -458,7 +458,7 @@
         <div class="vehicle-prompt">
             <div class="profile-inventory-header">
                 <div class="header-texts">
-                    <h1>Inventory Data</h1>
+                    <h1>Vehicle inventory data: {{OpenedVehiclesData.vehicle}}</h1>
                     <p>Vizualizezi toate itemele pe care {{userData['username']}} le detine.</p>
                 </div>
                 <div class="close-button">
