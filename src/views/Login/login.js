@@ -34,7 +34,7 @@ export default {
         password: this.loginPwd,
       };
       this.$axios
-        .post("https://api.fairplay-rp.ro/api/login", data, {
+        .post("http://localhost:5000/api/login", data, {
           withCredentials: true,
         })
         .then((response) => {
@@ -58,7 +58,7 @@ export default {
         password: this.loginPwd,
         code: this.loginCode,
       };
-      this.$axios.post("https://api.fairplay-rp.ro/api/register", data).then(
+      this.$axios.post("http://localhost:5000/api/register", data).then(
         (response) => {
           if (response.data.status == "success") {
             this.LoginNotify("success", "Contul a fost creat cu succes");

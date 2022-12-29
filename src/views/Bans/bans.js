@@ -17,7 +17,7 @@ export default {
   methods: {
     async GetBans() {
       try {
-        const usersResponse = await this.$axios.get("https://api.fairplay-rp.ro/api/users");
+        const usersResponse = await this.$axios.get("http://localhost:5000/api/users");
         const UsersData = usersResponse.data;
         const bansData = UsersData.filter(user => user.userBans).map(user => ({
           id: user.id,

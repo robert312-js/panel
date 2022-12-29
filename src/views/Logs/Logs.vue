@@ -7,19 +7,9 @@
             <div class="server-cards">
                 <div class="info-card">
                     <div class="data">
-                        <p>Total Users</p>
-                        <h1>287</h1>
-                        <p>Total Users</p>
-                    </div>
-                    <div class="stats-img">
-                        <img src="https://cdn.discordapp.com/attachments/934897156584796201/1057377005156454543/Promote-Growth-Purple.png">
-                    </div>
-                </div>
-                <div class="info-card">
-                    <div class="data">
-                        <p>Total Owned Vehicles</p>
-                        <h1>400</h1>
-                        <p>Total Cars</p>
+                        <p>Medium User Money</p>
+                        <h1>{{MediumMoney}}</h1>
+                        <p>Medium Money per User</p>
                     </div>
                     <div class="stats-img">
                         <img src="https://cdn.discordapp.com/attachments/934897156584796201/1057377005156454543/Promote-Growth-Purple.png">
@@ -28,8 +18,18 @@
                 <div class="info-card">
                     <div class="data">
                         <p>Total Money</p>
-                        <h1>$2212121212</h1>
-                        <p>Bank + Cash</p>
+                        <h1>{{TotalMoney}}</h1>
+                        <p>(Bank + Cash)</p>
+                    </div>
+                    <div class="stats-img">
+                        <img src="https://cdn.discordapp.com/attachments/934897156584796201/1057377005156454543/Promote-Growth-Purple.png">
+                    </div>
+                </div>
+                <div class="info-card">
+                    <div class="data">
+                        <p>Total Cash Money</p>
+                        <h1>{{CashMoney}}</h1>
+                        <p>Only Cash</p>
                     </div>
                     <div class="stats-img">
                         <img src="https://cdn.discordapp.com/attachments/934897156584796201/1057377005156454543/Promote-Growth-Purple.png">
@@ -38,7 +38,7 @@
                 <div class="info-card">
                     <div class="data">
                         <p>Total Bank</p>
-                        <h1>$2212121212</h1>
+                        <h1>{{BankMoney}}</h1>
                         <p>Only Bank</p>
                     </div>
                     <div class="stats-img">
@@ -57,22 +57,7 @@
                     </div>
                     <div class="line"></div>
                     <div class="chart-info">
-                        <line-chart></line-chart>
-                    </div>
-
-                    <div class="chart-data">
-                        <div class="info">
-                            <div class="color" style="background: #aea22d"></div>
-                            Total
-                        </div>
-                        <div class="info">
-                            <div class="color" style="background: #16cc35"></div>
-                            Wallet
-                        </div>
-                        <div class="info">
-                            <div class="color" style="background: #0c89ad"></div>
-                            Bank
-                        </div>
+                        <apexchart width="1200" height="400" type="line" :options="chartOptions" :series="series"></apexchart>
                     </div>
                 </div>
                 <div class="server-top-players"></div>
@@ -149,11 +134,11 @@
     align-items: center;
     gap: 1vw;
 
-    width: 87%;
+    width: 92%;
 }
 
 .logs-container .server-data .server-stats-container {
-    width: 75%;
+    width: 90%;
     height: 55vh;
     background-color: #1a1d1f;
     border-radius: .50vw;
@@ -195,42 +180,11 @@
     height: 75%;
 }
 
-.logs-container .server-data .server-stats-container .chart-data  {
-    width: 100%;
-    height: 10%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: .5vh;
-    padding: 1vh 1vw;
-}
-
-.logs-container .server-data .server-stats-container .chart-data .info {
-    width: 7vh;
-    height: 2vh;
-
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    gap: .4vw;
-
-    color: #ffffff50;
-    font-size: 1.5vh;
-}
-
-.logs-container .server-data .server-stats-container .chart-data .info .color {
-    width: 1.2vh;
-    height: 1.2vh;
-    border-radius: 50%;
-}
-
 .logs-container .server-data .server-top-players {
     width: 24%;
     height: 55vh;
     background-color: #1a1d1f;
     border-radius: .50vw;
 }
-
-
 
 </style>
