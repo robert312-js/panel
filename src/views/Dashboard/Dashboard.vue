@@ -9,7 +9,7 @@
 		<div class="boxes">
 			<div class="box">
 				<div class="box-text">
-					<h1>{{IntregistratedUsers}}</h1>
+					<h1>{{TotalPlayers}}</h1>
 					<p>Jucatori Inregistrati</p>
 				</div>
 				<div class="box-icon">
@@ -27,7 +27,7 @@
 			</div>
 			<div class="box">
 				<div class="box-text">
-					<h1>{{GetVipUsers}}</h1>
+					<h1>{{VipUsers}}</h1>
 					<p>Jucatori VIP</p>
 				</div>
 				<div class="box-icon">
@@ -36,7 +36,7 @@
 			</div>
 			<div class="box">
 				<div class="box-text">
-					<h1>{{GetVehiclesNumber}}</h1>
+					<h1>{{VehiclesNumber}}</h1>
 					<p>Vehicule</p>
 				</div>
 				<div class="box-icon">

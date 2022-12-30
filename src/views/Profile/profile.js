@@ -793,7 +793,8 @@ export default {
       this.userPunishLog = responseData['punishLog'];
       this.userHistory = responseData['history'];
       this.userVehicles = responseData['vehData'];
-      
+      this.UserItemsData = responseData['inventory'];
+
     } catch (error) {
       console.error(error);
     }
@@ -802,6 +803,6 @@ export default {
     this.hasUserAdmin();
     this.VerifyUserBan();
     this.GetUserTag();
-    this.GetUserInventory();
+   // this.GetUserInventory();
   }
 };

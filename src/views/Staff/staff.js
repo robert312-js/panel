@@ -17,24 +17,6 @@ export default {
     "Staff-Sidebar": Sidebar,
   },
   methods: {
-    async GetStaffMembers() {
-        let users = await this.$axios.get('http://localhost:5000/api/staff')
-        const PageData = users.data;		
-        const staffMembers = []
-        PageData.forEach((staff) => {
-            if (staff.adminLvl >= 1 ) {
-                staffMembers.push({
-                    id: staff.id,
-                    name: staff.username,
-                    adminLvl: staff.adminLvl,
-                    lastLogin: this.GetDate(staff.last_login),
-                    hoursPlayed: staff.hoursPlayed.toFixed(2),
-                })
-            }
-        });
-        this.StaffMembers = staffMembers.sort((x, y) => y.adminLvl - x.adminLvl);
-        this.setPages(this.StaffMembers)
-    },
     GoToProfile(id) {
         this.$router.push('/profile/' + id);
     },
@@ -50,18 +32,6 @@ export default {
                 this.IsUserAdmin = 0;
             }
         });
-    },
-    GetDate(timestamp) {
-        var a = new Date(timestamp * 1000);
-         var year = a.getFullYear();
-         var month = a.getMonth()
-         var date = a.getDate();
-         var hour = a.getHours();
-         var min = a.getMinutes();
-        var hour = a.getHours() > 12 ? a.getHours() - 12 : (a.getHours() < 10 ? "0" + a.getHours() : a.getHours());
-        var min  = a.getMinutes() < 10 ? "0" + a.getMinutes() : a.getMinutes();
-         var time = date + '/' + month + '/' + year + ' ' + hour + ':' + min;
-         return time;
     },
      // Paginations
     PagePlus() {
@@ -110,7 +80,15 @@ export default {
     setTimeout(() => {
         loader.hide()
     }, 2000)
-    this.GetStaffMembers();
+
+    try {
+        let users = await this.$axios.get('http://localhost:5000/api/staff')
+        const staffMembers = users.data;		
+        this.StaffMembers = staffMembers.sort((x, y) => y.adminLvl - x.adminLvl);
+        this.setPages(this.StaffMembers)
+    } catch(error) {
+        console.log(error)
+    }
     this.hasUserAdmin();
   }
 }
