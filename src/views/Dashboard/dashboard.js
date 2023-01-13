@@ -81,12 +81,7 @@ export default {
   computed: {
 
     GetOnlinePlayers() {
-      $.getJSON(
-        "https://servers-frontend.fivem.net/api/servers/single/2e3lgd",
-        async function (data) {
-          return (
-            (await data["Data"]["clients"]) +
-            "/" +
+      $.getJSON("https://servers-frontend.fivem.net/api/servers/single/2e3lgd",async function (data) {return ((await data["Data"]["clients"]) + "/" +
             data["Data"]["sv_maxclients"]
           );
         }
